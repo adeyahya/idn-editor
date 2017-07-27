@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700');
+@import 'lib';
+@import 'draft';
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #9197a3;
+}
+
+[contenteditable=true] {
+	outline: none;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+  cursor: text;
+}
+
+.remove-btn {
+	position: absolute;
+	right: -5px;
+	top: -5px;
+	border: none;
+	width: 20px;
+	height: 20px;
+	font-size: 1rem;
+	line-height: 1rem;
+	border-radius: 50%;
+	color: white;
+	background-color: #9197a3;
+	z-index: 2;
+	opacity: .3;
+	&:hover, :focus {
+		opacity: 1;
+	}
+}
+
+.container {
+	width: 960px;
+	margin: 0 auto;
+}
