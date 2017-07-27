@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { addContent, addTitle } from '../../actions'
 import RichEditor from '../components/RichEditor'
 import ImageUploader from '../components/ImageUploader'
+import Title from '../components/Title'
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -41,7 +42,7 @@ class Wrapper extends React.Component {
 							return ( <RichEditor key={ index } id={ index }></RichEditor> )
 
 						case 'title':
-							return ( <h1 key={ index } id={ index } contentEditable="true" placeholder="Title Here"></h1> )
+							return ( <Title type={ item.type } id={ index } key={ index }></Title> )
 
             case 'image':
               return ( <ImageUploader key={ index } id={ index }></ImageUploader> )

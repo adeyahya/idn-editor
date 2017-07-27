@@ -1,7 +1,7 @@
 import update from 'react-addons-update'
 
 const idneditor = (state = [
-  { label: 'title', value: '' },
+  { label: 'title', value: '', type: 'h1' },
   { label: 'content', value: '' },
   { label: 'image', value: '', link: '', caption: '' },
 ], action) => {
