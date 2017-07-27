@@ -12,16 +12,32 @@ class Title extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.header.innerHTML = this.props.value
+	}
+
 	_onChange() {
-		// console.log(this)
 		this.props.updateValue(this.props.id, this.header.innerHTML)
+	}
+
+	// Remove all styles or tag from clipboard when paste
+	_strip(e) {
+		e.preventDefault();
+    var text = e.clipboardData.getData("text/plain");
+    document.execCommand("insertHTML", false, text);
 	}
 
 	render() {
 		const elType = (type) => {
 			switch (type) {
 				case 'h1':
-					return ( <h1 onKeyUp={ this._onChange.bind(this) } ref={ (input) => this.header = input } contentEditable="true" placeholder={ this.state.placeholder }></h1> )
+					return (
+						<h1 
+							onKeyUp={ this._onChange.bind(this) } 
+							ref={ (input) => this.header = input } 
+							contentEditable="true" 
+							onPaste={ (e) => this._strip(e) }
+							placeholder={ this.state.placeholder }></h1>)
 
 				case 'h2': {
 					return ( <h2 onKeyUp={ this._onChange.bind(this) } ref={ (input) => this.header = input } contentEditable="true" placeholder={ this.state.placeholder }></h2> )

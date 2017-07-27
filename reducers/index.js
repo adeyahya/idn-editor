@@ -4,12 +4,18 @@ const idneditor = (state = [
   { label: 'title', value: '', type: 'h1' },
   { label: 'content', value: '' },
   { label: 'image', value: '', link: '', caption: '' },
+  { label: 'twitter', value: 'https://twitter.com/ifCoffeeEquals0/status/889221441840926721' },
 ], action) => {
   switch (action.type) {
     case 'ADD_CONTENT':
       return [
         ...state,
         { label: 'content', value: '' }
+      ]
+    case 'ADD_SECTION':
+      return [
+        ...state,
+        action.payload
       ]
     case 'ADD_TITLE':
       return [

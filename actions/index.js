@@ -16,6 +16,12 @@ export const addImage = () => {
 	}
 }
 
+export const addSection = (payload) => {
+	return (dispatch) => {
+		dispatch({ type: 'ADD_SECTION', payload: payload})
+	}
+}
+
 export const removeSection = (i) => {
 	return (dispatch) => {
 		dispatch({ type: 'REMOVE_SECTION', index: i })

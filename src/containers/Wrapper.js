@@ -1,16 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addContent, addTitle } from '../../actions'
+import { addContent, addTitle, addSection } from '../../actions'
 import RichEditor from '../components/RichEditor'
 import ImageUploader from '../components/ImageUploader'
 import Title from '../components/Title'
+import EmbedTwitter from '../components/EmbedTwitter'
 
 class Wrapper extends React.Component {
 	constructor(props) {
     super(props);
-
-    const self = this
-    
     this.state = {
     	data: [
     		{
@@ -33,23 +31,33 @@ class Wrapper extends React.Component {
   	this.props.addTitle()
   }
 
+  _addSection() {
+    this.props.addSection({label: 'twitter', value: ''})
+  }
+
 	render() {
 		return (
 			<div className="container">
 				{ this.props.data.map((item, index) => {
 					switch( item.label ) {
 						case 'content':
-							return ( <RichEditor key={ index } id={ index }></RichEditor> )
+							return ( <RichEditor value={ item.value } key={ index } id={ index }></RichEditor> )
 
 						case 'title':
-							return ( <Title type={ item.type } id={ index } key={ index }></Title> )
+							return ( <Title value={ item.value } type={ item.type } id={ index } key={ index }></Title> )
 
             case 'image':
-              return ( <ImageUploader key={ index } id={ index }></ImageUploader> )
+              return ( <ImageUploader value={ item.value } key={ index } id={ index }></ImageUploader> )
+
+            case 'twitter':
+              return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
 					}
 				}) }
-				<button onClick={ this._addRich.bind(this) }>add rich</button>
-				<button onClick={ this._addTitle.bind(this) }>add title</button>
+        <div className="text-center btn-group">
+          <button onClick={ this._addRich.bind(this) }>add rich</button>
+          <button onClick={ this._addTitle.bind(this) }>add title</button>
+          <button onClick={ this._addSection.bind(this) }><i className="fa fa-twitter"></i> add Twitter</button>
+        </div>
 			</div>
 		)
 	}
@@ -64,7 +72,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addContent: () => dispatch(addContent()),
-    addTitle: () => dispatch(addTitle())
+    addTitle: () => dispatch(addTitle()),
+    addSection: (payload) => dispatch(addSection(payload))
   }
 }
 
