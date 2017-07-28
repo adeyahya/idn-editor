@@ -19,8 +19,12 @@ class EmbedFacebook extends React.Component {
 		})
 	}
 
-	componentDidUpdate() {
-		root.FB.XFBML.parse()
+	componentDidMount() {
+		if (this.state.html != '') {
+			setTimeout(function() {
+				root.FB.XFBML.parse()
+			}, 1000)
+		}
 	}
 
 	_loadScript(url) {
@@ -57,6 +61,9 @@ class EmbedFacebook extends React.Component {
 				html: e.target.value
 			})
 			this.props.updateValue(this.props.id, e.target.value)
+			setTimeout(function() {
+				root.FB.XFBML.parse()
+			}, 1000)
 			e.target.value = ''
 		}
 	}
