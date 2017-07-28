@@ -1,10 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { addContent, addTitle, addSection } from '../../actions'
-import RichEditor from '../components/RichEditor'
+import BasicEditor from '../components/BasicEditor'
+// import BasicHtmlEditor from '../BasicHtmlEditor'
 import ImageUploader from '../components/ImageUploader'
 import Title from '../components/Title'
 import EmbedTwitter from '../components/EmbedTwitter'
+import EmbedFacebook from '../components/EmbedFacebook'
+import EmbedInstagram from '../components/EmbedInstagram'
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -31,8 +34,8 @@ class Wrapper extends React.Component {
   	this.props.addTitle()
   }
 
-  _addSection() {
-    this.props.addSection({label: 'twitter', value: ''})
+  _addSection(value) {
+    this.props.addSection(value)
   }
 
 	render() {
@@ -41,7 +44,7 @@ class Wrapper extends React.Component {
 				{ this.props.data.map((item, index) => {
 					switch( item.label ) {
 						case 'content':
-							return ( <RichEditor value={ item.value } key={ index } id={ index }></RichEditor> )
+							return ( <BasicEditor value={ item.value } key={ index } id={ index }></BasicEditor> )
 
 						case 'title':
 							return ( <Title value={ item.value } type={ item.type } id={ index } key={ index }></Title> )
@@ -51,12 +54,20 @@ class Wrapper extends React.Component {
 
             case 'twitter':
               return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
+
+            case 'facebook':
+              return ( <EmbedFacebook value={ item.value } key={ index } id={ index }></EmbedFacebook> )
+
+            case 'instagram':
+              return ( <EmbedInstagram value={ item.value } key={ index } id={ index }></EmbedInstagram> )
 					}
 				}) }
         <div className="text-center btn-group">
-          <button onClick={ this._addRich.bind(this) }>add rich</button>
-          <button onClick={ this._addTitle.bind(this) }>add title</button>
-          <button onClick={ this._addSection.bind(this) }><i className="fa fa-twitter"></i> add Twitter</button>
+          <button onClick={ this._addRich.bind(this) }><i className="fa fa-paragraph"></i> add Paragraph</button>
+          <button onClick={ this._addTitle.bind(this) }><i className="fa fa-header"></i> add Header</button>
+          <button onClick={ (e) => this._addSection({ label: 'twitter', value: '' }) }><i className="fa fa-twitter"></i> Embed Twitter</button>
+          <button onClick={ (e) => this._addSection({ label: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
+          <button onClick={ (e) => this._addSection({ label: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
         </div>
 			</div>
 		)

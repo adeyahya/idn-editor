@@ -2,8 +2,9 @@ import React from 'react'
 import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
+import root from 'window-or-global'
 
-class EmbedTwitter extends React.Component {
+class EmbedInstagram extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -19,7 +20,11 @@ class EmbedTwitter extends React.Component {
 	}
 
 	componentDidMount() {
-		this._loadScript('//platform.twitter.com/widgets.js')
+		root.instgrm.Embeds.process()
+	}
+
+	componentDidUpdate() {
+		root.instgrm.Embeds.process()
 	}
 
 	_loadScript(url) {
@@ -42,14 +47,6 @@ class EmbedTwitter extends React.Component {
 		})
 	}
 
-	_runScript(script) {
-		const body = document.getElementsByTagName('body')[0]
-		const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.innerHTML = script;
-    body.appendChild(s);
-	}
-
 	_onChange(e) {
 		if (e.keyCode == 13) {
 			this.setState({
@@ -57,18 +54,29 @@ class EmbedTwitter extends React.Component {
 			})
 			this.props.updateValue(this.props.id, e.target.value)
 			e.target.value = ''
-			this._loadScript('//platform.twitter.com/widgets.js')
 		}
 	}
 
 	render() {
+		const style = {
+			background:'#FFF',
+			border:'0',
+			borderRadius:'3px',
+			boxShadow:'0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+			margin: '1px',
+			maxWidth:'658px',
+			padding:'0',
+			width:'99.375%',
+			width:'-webkit-calc(100% - 2px)',
+			width:'calc(100% - 2px)'
+		}
 		return (
 			<div className="relative">
 				<button 
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
-				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link twitter post here .."/> : <blockquote className="twitter-tweet" data-lang="en"><a href={ this.state.html }></a></blockquote> }
+				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Instagram post here .."/> : <blockquote className="instagram-media" data-instgrm-captioned data-instgrm-version="7" style={style}><a href={ this.state.html } target="_blank"/></blockquote> }
 			</div>
 		)
 	}
@@ -87,6 +95,6 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-EmbedTwitter = connect(mapStateToProps, mapDispatchToProps)(EmbedTwitter)
+EmbedInstagram = connect(mapStateToProps, mapDispatchToProps)(EmbedInstagram)
 
-export default EmbedTwitter
+export default EmbedInstagram

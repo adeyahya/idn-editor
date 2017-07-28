@@ -2,8 +2,9 @@ import React from 'react'
 import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
+import root from 'window-or-global'
 
-class EmbedTwitter extends React.Component {
+class EmbedFacebook extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -18,8 +19,8 @@ class EmbedTwitter extends React.Component {
 		})
 	}
 
-	componentDidMount() {
-		this._loadScript('//platform.twitter.com/widgets.js')
+	componentDidUpdate() {
+		root.FB.XFBML.parse()
 	}
 
 	_loadScript(url) {
@@ -57,7 +58,6 @@ class EmbedTwitter extends React.Component {
 			})
 			this.props.updateValue(this.props.id, e.target.value)
 			e.target.value = ''
-			this._loadScript('//platform.twitter.com/widgets.js')
 		}
 	}
 
@@ -68,7 +68,7 @@ class EmbedTwitter extends React.Component {
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
-				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link twitter post here .."/> : <blockquote className="twitter-tweet" data-lang="en"><a href={ this.state.html }></a></blockquote> }
+				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook post here .."/> : <div className="fb-post" data-href={ this.state.html }></div> }
 			</div>
 		)
 	}
@@ -87,6 +87,6 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-EmbedTwitter = connect(mapStateToProps, mapDispatchToProps)(EmbedTwitter)
+EmbedFacebook = connect(mapStateToProps, mapDispatchToProps)(EmbedFacebook)
 
-export default EmbedTwitter
+export default EmbedFacebook

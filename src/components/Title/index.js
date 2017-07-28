@@ -28,6 +28,10 @@ class Title extends React.Component {
 	}
 
 	render() {
+		const style = {
+	    // border: 'solid #dddddd 1px',
+	    // padding: '0 10px'
+		}
 		const elType = (type) => {
 			switch (type) {
 				case 'h1':
@@ -35,12 +39,20 @@ class Title extends React.Component {
 						<h1 
 							onKeyUp={ this._onChange.bind(this) } 
 							ref={ (input) => this.header = input } 
-							contentEditable="true" 
+							contentEditable="true"
+							style={ style }
 							onPaste={ (e) => this._strip(e) }
 							placeholder={ this.state.placeholder }></h1>)
 
 				case 'h2': {
-					return ( <h2 onKeyUp={ this._onChange.bind(this) } ref={ (input) => this.header = input } contentEditable="true" placeholder={ this.state.placeholder }></h2> )
+					return ( 
+						<h2 
+							onKeyUp={ this._onChange.bind(this) }
+							ref={ (input) => this.header = input }
+							contentEditable="true"
+							style={ style }
+							onPaste={ (e) => this._strip(e) }
+							placeholder={ this.state.placeholder }></h2>)
 				}
 			}
 		}

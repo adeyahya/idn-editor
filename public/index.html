@@ -1,13 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
   <head>
     <meta charset="utf-8">
     <title>React Editor</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700" rel="stylesheet">
     <link href="/style.css" rel="stylesheet" href="text/css">
-    <!-- <script async src="https://platform.twitter.com/widgets.js"></script> -->
+    <script async defer src="//platform.instagram.com/en_US/embeds.js"></script>
   </head>
   <body>
+    <div id="fb-root"></div>
+    <script>
+      window.renderFB = function() {
+        FB.XFBML.parse()
+      }
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1645337432347069',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+      
+        // Get Embedded Video Player API Instance
+        var my_video_player;
+        FB.Event.subscribe('xfbml.ready', function(msg) {
+          if (msg.type === 'video') {
+            my_video_player = msg.instance;
+          }
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
     <div id="app"></div>
     <script src="/bundle.js"></script>
   </body>

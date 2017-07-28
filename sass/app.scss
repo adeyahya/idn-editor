@@ -1,6 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700');
-@import 'lib';
-@import 'draft';
+// @import 'lib';
+// @import 'draft';
+
+body {
+  padding-bottom: 250px;
+  font-family: 'Roboto Slab';
+  color: #333;
+  font-weight: 300;
+  font-size: 18px;
+}
 
 [contenteditable=true]:empty:before{
   content: attr(placeholder);
@@ -22,8 +29,8 @@
 	border: none;
 	width: 20px;
 	height: 20px;
-	font-size: 1rem;
-	line-height: 1rem;
+  font-size: 10px;
+	line-height: 10px;
 	border-radius: 50%;
 	color: white;
 	background-color: #9197a3;
@@ -39,34 +46,118 @@
 	margin: 0 auto;
 }
 
-body {
-	padding-bottom: 250px;
-}
-
-.twitter-tweet {
-	margin: 0 auto;
-}
-
 .input-link {
   width: 100%;
   border: none;
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  font-size: 1.2rem;
   outline: none;
 }
 
 .text-center {
 	text-align: center;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .btn-group {
 	button {
     border: none;
     border-radius: 50px;
-    padding: 4px 20px;
     margin: 0 3px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    line-height: 1rem;
     color: white;
     background: #55acee;
+    margin-bottom: 15px;
     outline: none;
 	}
+}
+
+.relative {
+	position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+pre {
+  white-space: normal;
+}
+
+.RichEditor-root {
+  background: #fff;
+  // border: 1px solid #ddd;
+  font-size: 14px;
+  // padding: 15px;
+  margin-bottom: 20px;
+}
+
+.RichEditor-editor {
+  border-top: 1px solid #ddd;
+  cursor: text;
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.RichEditor-editor .public-DraftEditorPlaceholder-root {
+  color: #9197a3;
+  position: absolute;
+  z-index: 0;
+}
+
+.RichEditor-editor .public-DraftEditorPlaceholder-root,
+.RichEditor-editor .public-DraftEditor-content {
+  margin: 0 -15px -15px;
+  padding: 15px;
+}
+
+.RichEditor-editor .public-DraftEditor-content {
+  // min-height: 100px;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-block {
+  margin: 0 0 1rem;
+}
+
+.RichEditor-editor .RichEditor-blockquote {
+  border-left: 5px solid #eee;
+  color: #666;
+  font-style: italic;
+  margin: 16px 0;
+  padding: 10px 20px;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  padding: 20px;
+}
+
+.RichEditor-controls {
+  font-size: 14px;
+  margin-bottom: 5px;
+  user-select: none;
+  display: inline-block;
+}
+
+.RichEditor-styleButton {
+  color: #999;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 2px 0;
+}
+
+.RichEditor-activeButton {
+  color: #5890ff;
+}
+
+
+.draftjs-bhe_link {
+  color: #3b5998;
+  text-decoration: 'underline';
 }
