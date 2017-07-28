@@ -76,7 +76,7 @@ class EmbedInstagram extends React.Component {
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
-				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Instagram post here .."/> : <blockquote className="instagram-media" data-instgrm-captioned data-instgrm-version="7" style={style}><a href={ this.state.html } target="_blank"/></blockquote> }
+				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Instagram post here .."/> : <blockquote className="instagram-media" data-instgrm-captioned data-instgrm-version="7" style={style}><a href={ this.state.html } target="_blank"/>Fetching Post</blockquote> }
 			</div>
 		)
 	}

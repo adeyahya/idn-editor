@@ -2,6 +2,7 @@ import React from 'react'
 import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
+import url from '../../utils/url'
 import root from 'window-or-global'
 
 class EmbedFacebook extends React.Component {
@@ -9,7 +10,8 @@ class EmbedFacebook extends React.Component {
 		super(props)
 
 		this.state = {
-			html: ''
+			html: '',
+			class: 'fb-post'
 		}
 	}
 
@@ -21,6 +23,19 @@ class EmbedFacebook extends React.Component {
 
 	componentDidMount() {
 		if (this.state.html != '') {
+			switch(url.crack(this.state.html).type) {
+				case 'comment_id':
+					this.setState({
+						class: 'fb-comment-embed'
+					})
+					break
+				case 'videos': {
+					this.setState({
+						class: 'fb-video'
+					})
+					break
+				}
+			}
 			setTimeout(function() {
 				root.FB.XFBML.parse()
 			}, 1000)
@@ -57,6 +72,25 @@ class EmbedFacebook extends React.Component {
 
 	_onChange(e) {
 		if (e.keyCode == 13) {
+
+			if (!url.crack(e.target.value)) {
+				alert('Not Valid URL')
+			}
+
+			switch(url.crack(e.target.value).type) {
+				case 'comment_id':
+					this.setState({
+						class: 'fb-comment-embed'
+					})
+					break
+				case 'videos': {
+					this.setState({
+						class: 'fb-video'
+					})
+					break
+				}
+			}
+
 			this.setState({
 				html: e.target.value
 			})
@@ -75,7 +109,7 @@ class EmbedFacebook extends React.Component {
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
-				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook post here .."/> : <div className="fb-post" data-href={ this.state.html }></div> }
+				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook here .."/> : <div className={ this.state.class } data-href={ this.state.html }></div> }
 			</div>
 		)
 	}
