@@ -13,6 +13,8 @@ class EmbedFacebook extends React.Component {
 			html: '',
 			class: 'fb-post'
 		}
+
+		this.handleRemove = this._handleRemove.bind(this)
 	}
 
 	componentWillMount() {
@@ -23,23 +25,44 @@ class EmbedFacebook extends React.Component {
 
 	componentDidMount() {
 		if (this.state.html != '') {
-			switch(url.crack(this.state.html).type) {
-				case 'comment_id':
+			this._renderFacebook(this.state.html)
+				.then(res => {
 					this.setState({
-						class: 'fb-comment-embed'
+						html: res.url,
+						class: res.type
 					})
-					break
-				case 'videos': {
-					this.setState({
-						class: 'fb-video'
-					})
-					break
-				}
-			}
-			setTimeout(function() {
-				root.FB.XFBML.parse()
-			}, 1000)
+					this.props.updateValue(this.props.id, res.url)
+					setTimeout(function() {
+						root.FB.XFBML.parse()
+					}, 1000)
+				})
 		}
+	}
+
+	_renderFacebook(payload) {
+		return new Promise(function(resolve, reject) {
+			let type = ""
+			let result = payload
+			let crackedUrl = url.crack(result)
+
+			if (!crackedUrl || crackedUrl.host != 'facebook.com') {
+				reject('not valid url')
+			}
+
+			switch(crackedUrl.type) {
+				case 'comment_id':
+					type = 'fb-comment-embed'
+					break
+				case 'videos':
+					type = 'fb-video'
+					break
+				default:
+					type = 'fb-post'
+					break
+			}
+
+			resolve({ url: result, type: type })
+		})
 	}
 
 	_loadScript(url) {
@@ -72,40 +95,32 @@ class EmbedFacebook extends React.Component {
 
 	_onChange(e) {
 		if (e.keyCode == 13) {
-
-			if (!url.crack(e.target.value)) {
-				alert('Not Valid URL')
-			}
-
-			switch(url.crack(e.target.value).type) {
-				case 'comment_id':
+			this._renderFacebook(e.target.value)
+				.then(res => {
 					this.setState({
-						class: 'fb-comment-embed'
+						html: res.url,
+						class: res.type
 					})
-					break
-				case 'videos': {
-					this.setState({
-						class: 'fb-video'
-					})
-					break
-				}
-			}
-
-			this.setState({
-				html: e.target.value
-			})
-			this.props.updateValue(this.props.id, e.target.value)
-			setTimeout(function() {
-				root.FB.XFBML.parse()
-			}, 1000)
+					this.props.updateValue(this.props.id, res.url)
+					setTimeout(function() {
+						root.FB.XFBML.parse()
+					}, 1000)
+				}).catch(err => {
+					console.log(err)
+				})
 			e.target.value = ''
 		}
+	}
+
+	_handleRemove() {
+		this.props.removeSection(this.props.id)
 	}
 
 	render() {
 		return (
 			<div className="relative">
 				<button 
+					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
@@ -117,7 +132,7 @@ class EmbedFacebook extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 

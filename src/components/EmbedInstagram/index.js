@@ -11,6 +11,8 @@ class EmbedInstagram extends React.Component {
 		this.state = {
 			html: ''
 		}
+
+		this.handleRemove = this._handleRemove.bind(this)
 	}
 
 	componentWillMount() {
@@ -57,6 +59,10 @@ class EmbedInstagram extends React.Component {
 		}
 	}
 
+	_handleRemove() {
+		this.props.removeSection(this.props.id)
+	}
+
 	render() {
 		const style = {
 			background:'#FFF',
@@ -72,7 +78,8 @@ class EmbedInstagram extends React.Component {
 		}
 		return (
 			<div className="relative">
-				<button 
+				<button
+					onClick={ this.handleRemove } 
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
@@ -84,7 +91,7 @@ class EmbedInstagram extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 

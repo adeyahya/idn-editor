@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addContent, addTitle, addSection } from '../../actions'
+import { addSection } from '../../actions'
 import BasicEditor from '../components/BasicEditor'
 import ImageUploader from '../components/ImageUploader'
 import Title from '../components/Title'
@@ -12,26 +12,6 @@ import UnsplashGallery from '../components/UnsplashGallery'
 class Wrapper extends React.Component {
 	constructor(props) {
     super(props);
-    this.state = {
-    	data: [
-    		{
-    			label: 'title',
-    			value: ''
-    		},
-    		{
-    			label: 'content',
-    			value: ''
-    		}
-    	]
-    }
-  }
-
-  _addRich() {
-  	this.props.addContent()
-  }
-
-  _addTitle() {
-  	this.props.addTitle()
   }
 
   _addSection(value) {
@@ -41,34 +21,45 @@ class Wrapper extends React.Component {
 	render() {
 		return (
 			<div className="container">
-        <UnsplashGallery></UnsplashGallery>
+        <br/>
 				{ this.props.data.map((item, index) => {
-					switch( item.label ) {
+					switch( item.type ) {
 						case 'content':
 							return ( <BasicEditor value={ item.value } key={ index } id={ index }></BasicEditor> )
+              break
 
 						case 'title':
-							return ( <Title value={ item.value } type={ item.type } id={ index } key={ index }></Title> )
+							return ( <Title value={ item.value } type={ item.style } id={ index } key={ index }></Title> )
+              break
 
             case 'image':
               return ( <ImageUploader value={ item.value } key={ index } id={ index }></ImageUploader> )
+              break
 
             case 'twitter':
               return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
+              break
 
             case 'facebook':
               return ( <EmbedFacebook value={ item.value } key={ index } id={ index }></EmbedFacebook> )
+              break
 
             case 'instagram':
               return ( <EmbedInstagram value={ item.value } key={ index } id={ index }></EmbedInstagram> )
+              break
+
+            case 'unsplash':
+              return ( <UnsplashGallery value={ item.value } key={ index } id={ index }></UnsplashGallery> )
+              break
 					}
 				}) }
         <div className="text-center btn-group">
-          <button onClick={ this._addRich.bind(this) }><i className="fa fa-paragraph"></i> add Paragraph</button>
-          <button onClick={ this._addTitle.bind(this) }><i className="fa fa-header"></i> add Header</button>
-          <button onClick={ (e) => this._addSection({ label: 'twitter', value: '' }) }><i className="fa fa-twitter"></i> Embed Twitter</button>
-          <button onClick={ (e) => this._addSection({ label: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
-          <button onClick={ (e) => this._addSection({ label: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
+          <button onClick={ (e) => this._addSection({ type: 'content', value: '' }) }><i className="fa fa-paragraph"></i> add Paragraph</button>
+          <button onClick={ (e) => this._addSection({ type: 'title', value: '', style: 'h2' }) }><i className="fa fa-header"></i> add Header</button>
+          <button onClick={ (e) => this._addSection({ type: 'twitter', value: '' }) }><i className="fa fa-twitter"></i> Embed Twitter</button>
+          <button onClick={ (e) => this._addSection({ type: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
+          <button onClick={ (e) => this._addSection({ type: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
+          <button onClick={ (e) => this._addSection({ type: 'unsplash', value: '' }) }><i className="fa fa-camera"></i> Unsplash</button>
         </div>
 			</div>
 		)
@@ -77,14 +68,12 @@ class Wrapper extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addContent: () => dispatch(addContent()),
-    addTitle: () => dispatch(addTitle()),
     addSection: (payload) => dispatch(addSection(payload))
   }
 }

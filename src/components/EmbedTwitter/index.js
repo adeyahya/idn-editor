@@ -10,6 +10,8 @@ class EmbedTwitter extends React.Component {
 		this.state = {
 			html: ''
 		}
+
+		this.handleRemove = this._handleRemove.bind(this)
 	}
 
 	componentWillMount() {
@@ -20,6 +22,10 @@ class EmbedTwitter extends React.Component {
 
 	componentDidMount() {
 		this._loadScript('//platform.twitter.com/widgets.js')
+	}
+
+	_handleRemove() {
+		this.props.removeSection(this.props.id)
 	}
 
 	_loadScript(url) {
@@ -65,6 +71,7 @@ class EmbedTwitter extends React.Component {
 		return (
 			<div className="relative">
 				<button 
+					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
@@ -76,7 +83,7 @@ class EmbedTwitter extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 

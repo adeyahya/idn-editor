@@ -73,8 +73,7 @@ class BasicEditor extends React.Component {
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.handleReturn = (e) => this._handleReturn(e);
-    this.addLink = this._addLink.bind(this);
-    this.removeLink = this._removeLink.bind(this);
+    this.handleRemove = this._handleRemove.bind(this)
   }
 
   _handleKeyCommand(command) {
@@ -159,6 +158,10 @@ class BasicEditor extends React.Component {
     console.log(html)
   }
 
+  _handleRemove() {
+    this.props.removeSection(this.props.id)
+  }
+
   render() {
     const {editorState} = this.state;
 
@@ -172,31 +175,42 @@ class BasicEditor extends React.Component {
       }
     }
 
+    let style = {
+      position: 'relative'
+    }
+
     return (
-      <div className="RichEditor-root draftjs-bhe">
-        <BlockStyleControls
-          editorState={editorState}
-          blockTypes={this.BLOCK_TYPES}
-          onToggle={this.toggleBlockType}
-        />
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={this.toggleInlineStyle}
-          inlineStyles={this.INLINE_STYLES}
-        />
-        <div className={className} /* onClick={this.focus} */>
-          <Editor
-            blockStyleFn={getBlockStyle}
-            customStyleMap={styleMap}
+      <div style={ style }>
+        <button
+          onClick={ this.handleRemove } 
+          className="remove-btn">
+            <i className="fa fa-times"></i>
+          </button>
+        <div className="RichEditor-root draftjs-bhe">
+          <BlockStyleControls
             editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            handleReturn={this.handleReturn}
-            onChange={this.onChange}
-            stripPastedStyles={true}
-            placeholder="Tell a story..."
-            ref="editor"
-            spellCheck={false}
+            blockTypes={this.BLOCK_TYPES}
+            onToggle={this.toggleBlockType}
           />
+          <InlineStyleControls
+            editorState={editorState}
+            onToggle={this.toggleInlineStyle}
+            inlineStyles={this.INLINE_STYLES}
+          />
+          <div className={className} /* onClick={this.focus} */>
+            <Editor
+              blockStyleFn={getBlockStyle}
+              customStyleMap={styleMap}
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              handleReturn={this.handleReturn}
+              onChange={this.onChange}
+              stripPastedStyles={true}
+              placeholder="Tell a story..."
+              ref="editor"
+              spellCheck={false}
+            />
+          </div>
         </div>
       </div>
     );
@@ -205,7 +219,7 @@ class BasicEditor extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 

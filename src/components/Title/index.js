@@ -1,7 +1,7 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { updateValue } from '../../../actions'
+import { updateValue, removeSection } from '../../../actions'
 
 class Title extends React.Component {
 	constructor(props) {
@@ -10,6 +10,8 @@ class Title extends React.Component {
 		this.state = {
 			placeholder: 'Title Here ...'
 		}
+
+		this.handleRemove = this._handleRemove.bind(this)
 	}
 
 	componentDidMount() {
@@ -27,8 +29,13 @@ class Title extends React.Component {
     document.execCommand("insertHTML", false, text);
 	}
 
+	_handleRemove() {
+		this.props.removeSection(this.props.id)
+	}
+
 	render() {
 		const style = {
+			position: 'relative',
 	    // border: 'solid #dddddd 1px',
 	    // padding: '0 10px'
 		}
@@ -58,9 +65,12 @@ class Title extends React.Component {
 		}
 
 		return (
-			<header>
-				{ elType(this.props.type) }
-			</header>
+			<div>
+				<header style={ style }>
+					{ this.props.type == 'h2' ? <button onClick={ this.handleRemove } className="remove-btn"><i className="fa fa-times"></i></button> : null }
+					{ elType(this.props.type) }
+				</header>
+			</div>
 		)
 	}
 }
@@ -75,13 +85,14 @@ Title.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state
+    data: state.data
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateValue: (index, value) => dispatch(updateValue(index, value))
+    updateValue: (index, value) => dispatch(updateValue(index, value)),
+    removeSection: (index) => dispatch(removeSection(index))
   }
 }
 

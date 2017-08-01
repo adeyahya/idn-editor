@@ -1,12 +1,15 @@
 import React from 'react'
 import Unsplash from 'unsplash-js'
+import { connect } from 'react-redux'
+import { removeSection, updateValue } from '../../../actions'
 
 class UnsplashGallery extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			photos: []
+			photos: [],
+			value: ''
 		}
 
 		this.handleUpload = () => this._handleUpload()
@@ -16,15 +19,23 @@ class UnsplashGallery extends React.Component {
 		  callbackUrl: "http://localhost:3000"
 		});
 		this.handleSearch = this._handleSearch.bind(this)
+		this.selectImage = this._selectImage.bind(this)
+		this.handleRemove = this._handleRemove.bind(this)
 	}
 	componentWillMount() {
-		this.unsplash.photos.getRandomPhoto({ count: "60" })
-		  .then(res => res.json())
-		  .then(json => {
-		    this.setState({
-		    	photos: json
-		    })
-		  });
+		if (this.props.value == '') {
+			this.unsplash.photos.getRandomPhoto({ count: "60" })
+			  .then(res => res.json())
+			  .then(json => {
+			    this.setState({
+			    	photos: json
+			    })
+			  });
+		} else {
+			this.setState({
+				value: this.props.value
+			})
+		}
 	}
 
 	_handleSearch(e) {
@@ -46,34 +57,86 @@ class UnsplashGallery extends React.Component {
 		this.inputSearch.value = ""
 	}
 
+	_selectImage(unsplashUrl) {
+		this.setState({
+			value: unsplashUrl
+		})
+	}
+
+	_handleRemove() {
+		this.props.removeSection(this.props.id)
+	}
+
 	render() {
 		const style = {
 			button: {
 				display: 'none'
+			},
+			figure: {
+				margin: '0'
+			},
+			image: {
+				width: '100%'
 			}
 		}
+
+		const unsplashSelector = () => {
+			return (
+				<div className="unsplash-gallery">
+					<div className="unsplash-gallery--form">
+						<form onSubmit={ this.handleSearch }>
+							<input type="text" ref={ (input) => { this.inputSearch = input } } placeholder="Search Photos on Unsplash"/>
+							<button style={ style.button } type="submit">Search</button>
+						</form>
+					</div>
+					<div className="unsplash-gallery--wrapper">
+						{ this.state.photos.map((item, index) => {
+							let backgroundColor = { backgroundColor: item.color}
+							let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
+							return (
+								<figure onClick={ () => this.selectImage(item.urls.regular) } key={ index } style={ backgroundColor }>
+									<img style={ dimension } src={ item.urls.small } alt=""/>
+								</figure>
+							)
+						}) }
+					</div>
+				</div>
+			)
+		}
+
+		const unsplashImage = () => {
+			return (
+				<figure style={ style.figure }>
+					<img style={ style.image } src={ this.state.value } alt=""/>
+				</figure>
+			)
+		}
 		return (
-			<div className="unsplash-gallery">
-				<div className="unsplash-gallery--form">
-					<form onSubmit={ this.handleSearch }>
-						<input type="text" ref={ (input) => { this.inputSearch = input } } placeholder="Search Photos on Unsplash"/>
-						<button style={ style.button } type="submit">Search</button>
-					</form>
-				</div>
-				<div className="unsplash-gallery--wrapper">
-					{ this.state.photos.map((item, index) => {
-						let backgroundColor = { backgroundColor: item.color}
-						let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
-						return (
-							<figure key={ index } style={ backgroundColor }>
-								<img style={ dimension } src={ item.urls.small } alt=""/>
-							</figure>
-						)
-					}) }
-				</div>
+			<div className="relative">
+				<button 
+					onClick={ this.handleRemove }
+					className="remove-btn">
+					  <i className="fa fa-times"></i>
+					</button>
+				{ this.state.value === '' ? unsplashSelector() : unsplashImage() }
 			</div>
 		)
 	}
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    data: state.data
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeSection: index => dispatch(removeSection(index)),
+    updateValue: (index, value) => dispatch(updateValue(index, value))
+  }
+}
+
+UnsplashGallery = connect(mapStateToProps, mapDispatchToProps)(UnsplashGallery)
 
 export default UnsplashGallery
