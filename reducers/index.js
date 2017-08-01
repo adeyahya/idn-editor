@@ -9,8 +9,11 @@ const idneditor = (state = {
 <p>The FCC has existing rules in place to protect net neutrality and ensure that anyone with an internet connection has a fair shot at turning an idea into something that can change the world. That would change if internet providers were allowed to decide what content its customers could access, or charge customers more to access the websites and services of their choice.</p>
 <p>The FCC’s current rules help prevent this from happening. We strongly support those rules, but the FCC’s new proposal could undo those protections. That’s why Facebook supports strong net neutrality rules that will keep the internet free and open.</p>
 <p>We’re open to working with anyone, including members of Congress, on a solution that will preserve strong net neutrality protections. We hope you join us in this fight. To learn more about the day of action</p>` },
-  { type: 'facebook', value: 'https://www.facebook.com/zuck/posts/10103878724831141' },
-  { type: 'facebook', value: 'https://www.facebook.com/sheryl/posts/10158920063590177' },
+  { type: 'facebook', value: 'https://web.facebook.com/FacebookIndonesia/videos/391132524357127/' },
+  { type: 'title', style: 'h2', value: 'One of the best ways for creators' },
+  { type: 'content', value: `<p>One of the best ways for creators to reach new audiences and broaden distribution of their videos on Facebook is when people re-share their videos. To make sure we’re meeting the needs of both creators and those who re-share content, we’re redesigning insights for re-shares.</p>
+<p>We gathered feedback from creators and re-sharers and tested new metrics. We heard that creators want more information about which Pages are re-sharing their videos. In addition, creators put a lot of work and investment into the videos they create and share on Facebook, and they would prefer if re-sharers didn’t have access to certain metrics about their videos.</p>` },
+  { type: 'unsplash', value: '' },
   ]
 }, action) => {
   switch (action.type) {

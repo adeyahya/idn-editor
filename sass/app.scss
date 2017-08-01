@@ -44,9 +44,34 @@ body {
 	}
 }
 
+@media (min-width: 749px) {
+  .container {
+    width: calc(100% - 40px);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 600px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 700px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 800px;
+  }
+}
 .container {
-	width: 700px;
-	margin: 0 auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .input-link {
@@ -153,6 +178,7 @@ pre {
   cursor: pointer;
   margin-right: 16px;
   padding: 2px 0;
+  display: inline-block;
 }
 
 .RichEditor-activeButton {

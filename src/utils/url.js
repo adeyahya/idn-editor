@@ -1,7 +1,12 @@
 module.exports = {
 	crack: function(url) {
+		var httpRegex = /^(http|https)+:\/\//g
 		var regex = /(youtube.com|youtu.be|facebook.com|fb.com|twitter.com|instagram.com|t.co)/
 		var regtype = /(videos|comment_id)/
+
+		if (!httpRegex.exec(url)) {
+			return false
+		}
 
 		if (regex.exec(url) !== null) return {
 			host: regex.exec(url)[0],

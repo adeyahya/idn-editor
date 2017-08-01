@@ -12,7 +12,8 @@ class EmbedFacebook extends React.Component {
 		this.state = {
 			html: '',
 			class: 'fb-post',
-			warn: ''
+			warn: '',
+			errorMessage: 'URL Not Valid! make sure your url included https or http and the link is come from facebook.com'
 		}
 
 		this.handleRemove = this._handleRemove.bind(this)
@@ -39,23 +40,26 @@ class EmbedFacebook extends React.Component {
 							root.FB.XFBML.parse()
 						}
 					}, 1000)
-					setTimeout(function() {
-						elem.classList.remove("fb-post")
-						elem.classList.remove("fb-video")
-						elem.classList.remove("fb-comment-embed")
-					}, 2000)
+					if (elem) {
+						setTimeout(function() {
+							elem.classList.remove("fb-post")
+							elem.classList.remove("fb-video")
+							elem.classList.remove("fb-comment-embed")
+						}, 2000)
+					}
 				})
 		}
 	}
 
 	_renderFacebook(payload) {
+		let errorMessage = this.state.errorMessage
 		return new Promise(function(resolve, reject) {
 			let type = ""
 			let result = payload
 			let crackedUrl = url.crack(result)
 
 			if (!crackedUrl || crackedUrl.host != 'facebook.com') {
-				reject('not valid url')
+				reject(errorMessage)
 			}
 
 			switch(crackedUrl.type) {
@@ -106,6 +110,7 @@ class EmbedFacebook extends React.Component {
 		this.setState({
 			warn: ''
 		})
+		let elem = this.elem
 		if (e.keyCode == 13) {
 			this._renderFacebook(e.target.value)
 				.then(res => {
@@ -119,11 +124,13 @@ class EmbedFacebook extends React.Component {
 							root.FB.XFBML.parse()
 						}
 					}, 1000)
-					setTimeout(function() {
-						elem.classList.remove("fb-post")
-						elem.classList.remove("fb-video")
-						elem.classList.remove("fb-comment-embed")
-					}, 2000)
+					if (elem) {
+						setTimeout(function() {
+							elem.classList.remove("fb-post")
+							elem.classList.remove("fb-video")
+							elem.classList.remove("fb-comment-embed")
+						}, 2000)
+					}
 				}).catch(err => {
 					this.setState({
 						warn: err
