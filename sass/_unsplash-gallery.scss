@@ -1,0 +1,28 @@
+.unsplash-gallery {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  &--form {
+  	display: 1 0 0;
+  }
+
+  &--wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: scroll;
+    figure {
+			flex: 33.3333% 0 0;
+			height: 200px;
+			margin: 0;
+			position: relative;
+			overflow: hidden;
+			img {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+    }
+  }
+}

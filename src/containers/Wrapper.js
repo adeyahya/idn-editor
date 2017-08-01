@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { addContent, addTitle, addSection } from '../../actions'
 import BasicEditor from '../components/BasicEditor'
-// import BasicHtmlEditor from '../BasicHtmlEditor'
 import ImageUploader from '../components/ImageUploader'
 import Title from '../components/Title'
 import EmbedTwitter from '../components/EmbedTwitter'
 import EmbedFacebook from '../components/EmbedFacebook'
 import EmbedInstagram from '../components/EmbedInstagram'
+import UnsplashGallery from '../components/UnsplashGallery'
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -41,6 +41,7 @@ class Wrapper extends React.Component {
 	render() {
 		return (
 			<div className="container">
+        <UnsplashGallery></UnsplashGallery>
 				{ this.props.data.map((item, index) => {
 					switch( item.label ) {
 						case 'content':

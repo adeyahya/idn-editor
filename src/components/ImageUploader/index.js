@@ -1,11 +1,13 @@
 import React from 'react'
+import Unsplash from 'unsplash-js'
 
 class ImageUploader extends React.Component {
 	constructor(props) {
 		super(props)
-
+		this.state = {
+			unsplash: false
+		}
 		this.handleFileInput = (e) => this._handleFileInput(e)
-		this.handleUpload = () => this._handleUpload()
 	}
 
 	_handleFileInput(e) {
@@ -28,21 +30,24 @@ class ImageUploader extends React.Component {
 		    padding: '100px 0',
 		    marginBottom: '20px',
 		    borderRadius: '5px',
+		    marginTop: '20px'
+			},
+			bg: {
+				backgroundColor: 'white'
 			}
 		}
 		return (
-			<div style={ style.wrapper } onClick={ this.handleUpload }>
+			<div style={ style.wrapper } onClick={ () => this.setState({ unsplash: true}) }>
 				<button 
           className="remove-btn">
             <i className="fa fa-times"></i>
           </button>
-				upload image
+          image here
 				<input 
 					ref={ (input) => { this.fileInput = input } }
 					onChange={ this.handleFileInput }
 					type="file" 
 					style={ style.fileinput }/>
-
 			</div>
 		)
 	}
