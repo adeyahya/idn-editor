@@ -11,7 +11,8 @@ class EmbedFacebook extends React.Component {
 
 		this.state = {
 			html: '',
-			class: 'fb-post'
+			class: 'fb-post',
+			warn: ''
 		}
 
 		this.handleRemove = this._handleRemove.bind(this)
@@ -24,6 +25,7 @@ class EmbedFacebook extends React.Component {
 	}
 
 	componentDidMount() {
+		let elem = this.elem
 		if (this.state.html != '') {
 			this._renderFacebook(this.state.html)
 				.then(res => {
@@ -33,8 +35,15 @@ class EmbedFacebook extends React.Component {
 					})
 					this.props.updateValue(this.props.id, res.url)
 					setTimeout(function() {
-						root.FB.XFBML.parse()
+						if (root.FB) {
+							root.FB.XFBML.parse()
+						}
 					}, 1000)
+					setTimeout(function() {
+						elem.classList.remove("fb-post")
+						elem.classList.remove("fb-video")
+						elem.classList.remove("fb-comment-embed")
+					}, 2000)
 				})
 		}
 	}
@@ -94,6 +103,9 @@ class EmbedFacebook extends React.Component {
 	}
 
 	_onChange(e) {
+		this.setState({
+			warn: ''
+		})
 		if (e.keyCode == 13) {
 			this._renderFacebook(e.target.value)
 				.then(res => {
@@ -103,10 +115,19 @@ class EmbedFacebook extends React.Component {
 					})
 					this.props.updateValue(this.props.id, res.url)
 					setTimeout(function() {
-						root.FB.XFBML.parse()
+						if (root.FB) {
+							root.FB.XFBML.parse()
+						}
 					}, 1000)
+					setTimeout(function() {
+						elem.classList.remove("fb-post")
+						elem.classList.remove("fb-video")
+						elem.classList.remove("fb-comment-embed")
+					}, 2000)
 				}).catch(err => {
-					console.log(err)
+					this.setState({
+						warn: err
+					})
 				})
 			e.target.value = ''
 		}
@@ -124,7 +145,9 @@ class EmbedFacebook extends React.Component {
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
-				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook here .."/> : <div className={ this.state.class } data-href={ this.state.html }></div> }
+				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook here .."/> : <div ref={ (elem) => this.elem = elem } className={ this.state.class } data-href={ this.state.html }></div> }
+
+				{ this.state.warn == '' ? null : <div className="warn"> { this.state.warn } </div> }
 			</div>
 		)
 	}

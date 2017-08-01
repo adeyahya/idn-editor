@@ -155,7 +155,6 @@ class BasicEditor extends React.Component {
     let html = es.getCurrentContent()
     html = stateToHTML(html);
     this.props.updateValue(this.props.id, html)
-    console.log(html)
   }
 
   _handleRemove() {

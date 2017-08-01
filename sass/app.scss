@@ -36,7 +36,7 @@ body {
 	line-height: 10px;
 	border-radius: 50%;
 	color: white;
-	background-color: #9197a3;
+	background-color: black;
 	z-index: 2;
 	opacity: .3;
 	&:hover, :focus {
@@ -228,4 +228,12 @@ input[type="text"] {
   font-size: 2rem;
   background: transparent;
   outline: none;
+}
+
+.warn {
+  display: block;
+  background: #bd4f4f;
+  font-size: 13px;
+  padding: 10px 20px;
+  color: white;
 }

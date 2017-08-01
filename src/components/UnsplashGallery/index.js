@@ -61,10 +61,23 @@ class UnsplashGallery extends React.Component {
 		this.setState({
 			value: unsplashUrl
 		})
+		this.props.updateValue(this.props.id, unsplashUrl)
 	}
 
 	_handleRemove() {
 		this.props.removeSection(this.props.id)
+	}
+
+	_mouseEnter() {
+		document.querySelector('html, body').style.overflow = 'hidden'
+	}
+
+	_mouseLeave() {
+		document.querySelector('html, body').style.overflow = 'initial'
+	}
+
+	componentDidUpdate() {
+		document.querySelector('html, body').style.overflow = 'initial'
 	}
 
 	render() {
@@ -89,7 +102,7 @@ class UnsplashGallery extends React.Component {
 							<button style={ style.button } type="submit">Search</button>
 						</form>
 					</div>
-					<div className="unsplash-gallery--wrapper">
+					<div className="unsplash-gallery--wrapper" onMouseEnter={ this._mouseEnter } onMouseLeave={ this._mouseLeave }>
 						{ this.state.photos.map((item, index) => {
 							let backgroundColor = { backgroundColor: item.color}
 							let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
