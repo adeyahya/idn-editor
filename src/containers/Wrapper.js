@@ -26,31 +26,24 @@ class Wrapper extends React.Component {
 					switch( item.type ) {
 						case 'content':
 							return ( <BasicEditor value={ item.value } key={ index } id={ index }></BasicEditor> )
-              break
 
 						case 'title':
 							return ( <Title value={ item.value } type={ item.style } id={ index } key={ index }></Title> )
-              break
 
             case 'image':
               return ( <ImageUploader value={ item.value } key={ index } id={ index }></ImageUploader> )
-              break
 
             case 'twitter':
               return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
-              break
 
             case 'facebook':
               return ( <EmbedFacebook value={ item.value } key={ index } id={ index }></EmbedFacebook> )
-              break
 
             case 'instagram':
               return ( <EmbedInstagram value={ item.value } key={ index } id={ index }></EmbedInstagram> )
-              break
 
             case 'unsplash':
               return ( <UnsplashGallery value={ item.value } key={ index } id={ index }></UnsplashGallery> )
-              break
 					}
 				}) }
         <div className="text-center btn-group">

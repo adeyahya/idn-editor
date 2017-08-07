@@ -14,7 +14,7 @@ let babel = {
         test: /\.js?$/,
         loader: 'babel-loader',
         options: {
-          presets: ['es2015']
+          presets: ['flow','react','es2015']
         },
         exclude: [
           path.resolve(__dirname, 'node_modules')

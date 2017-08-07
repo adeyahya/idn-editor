@@ -1,4 +1,5 @@
-require('../sass/app.scss')
+import path from 'path';
+import '../sass/app.scss';
 import 'font-awesome/scss/font-awesome.scss';
 import React from 'react';
 import { render } from 'react-dom';
