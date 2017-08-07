@@ -13,6 +13,9 @@ const idneditor = (state = {
   { type: 'title', style: 'h2', value: 'One of the best ways for creators' },
   { type: 'content', value: `<p>One of the best ways for creators to reach new audiences and broaden distribution of their videos on Facebook is when people re-share their videos. To make sure we’re meeting the needs of both creators and those who re-share content, we’re redesigning insights for re-shares.</p>
 <p>We gathered feedback from creators and re-sharers and tested new metrics. We heard that creators want more information about which Pages are re-sharing their videos. In addition, creators put a lot of work and investment into the videos they create and share on Facebook, and they would prefer if re-sharers didn’t have access to certain metrics about their videos.</p>` },
+	{ type: 'youtube', value: 'https://www.youtube.com/embed/6pxIcH_0MH0' },
+	{ type: 'content', value: `<p>One of the best ways for creators to reach new audiences and broaden distribution of their videos on Facebook is when people re-share their videos. To make sure we’re meeting the needs of both creators and those who re-share content, we’re redesigning insights for re-shares.</p>
+<p>We gathered feedback from creators and re-sharers and tested new metrics. We heard that creators want more information about which Pages are re-sharing their videos. In addition, creators put a lot of work and investment into the videos they create and share on Facebook, and they would prefer if re-sharers didn’t have access to certain metrics about their videos.</p>` },
   { type: 'unsplash', value: '' },
   ]
 }, action) => {

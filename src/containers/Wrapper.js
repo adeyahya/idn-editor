@@ -1,13 +1,14 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { addSection } from '../../actions'
-import BasicEditor from '../components/BasicEditor'
-import ImageUploader from '../components/ImageUploader'
-import Title from '../components/Title'
-import EmbedTwitter from '../components/EmbedTwitter'
-import EmbedFacebook from '../components/EmbedFacebook'
-import EmbedInstagram from '../components/EmbedInstagram'
-import UnsplashGallery from '../components/UnsplashGallery'
+import React from 'react';
+import { connect } from 'react-redux';
+import { addSection } from '../../actions';
+import BasicEditor from '../components/BasicEditor';
+import ImageUploader from '../components/ImageUploader';
+import Title from '../components/Title';
+import EmbedTwitter from '../components/EmbedTwitter';
+import EmbedFacebook from '../components/EmbedFacebook';
+import EmbedInstagram from '../components/EmbedInstagram';
+import UnsplashGallery from '../components/UnsplashGallery';
+import EmbedYoutube from '../components/EmbedYoutube';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -21,7 +22,7 @@ class Wrapper extends React.Component {
 	render() {
 		return (
 			<div className="container">
-        <br/>
+				<br/>
 				{ this.props.data.map((item, index) => {
 					switch( item.type ) {
 						case 'content':
@@ -44,6 +45,9 @@ class Wrapper extends React.Component {
 
             case 'unsplash':
               return ( <UnsplashGallery value={ item.value } key={ index } id={ index }></UnsplashGallery> )
+
+           	case 'youtube':
+              return ( <EmbedYoutube value={ item.value } key={ index } id={ index }></EmbedYoutube> )
 					}
 				}) }
         <div className="text-center btn-group">
@@ -52,6 +56,7 @@ class Wrapper extends React.Component {
           <button onClick={ (e) => this._addSection({ type: 'twitter', value: '' }) }><i className="fa fa-twitter"></i> Embed Twitter</button>
           <button onClick={ (e) => this._addSection({ type: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
           <button onClick={ (e) => this._addSection({ type: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
+          <button onClick={ (e) => this._addSection({ type: 'youtube', value: '' }) }><i className="fa fa-youtube"></i> Embed Youtube</button>
           <button onClick={ (e) => this._addSection({ type: 'unsplash', value: '' }) }><i className="fa fa-camera"></i> Unsplash</button>
         </div>
 			</div>
