@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import debounce from 'lodash/debounce';
-import { stateToHTML } from 'draft-js-export-html';
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
 import {
@@ -74,6 +71,28 @@ class BasicEditor extends React.Component {
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.handleReturn = (e) => this._handleReturn(e);
     this.handleRemove = this._handleRemove.bind(this)
+  }
+
+  componentWillMount() {
+  	if (!localStorage.getItem('dictionary')) {
+  		import(/* webpackChunkName: "superagent" */ 'superagent').then( request => {
+				request
+		  		.get('/dictionary.txt')
+		  		.set('Content-Type', 'plain/text')
+		  		.then(res => {
+		  			localStorage.setItem('dictionary', res.text);
+		  			this.setState({
+		  				dictionary: localStorage.getItem('dictionary')
+		  			})
+		  		}).catch((err) => {
+		  			console.warn(err.message);
+		  		})
+  		})
+  	}
+
+	  this.setState({
+			dictionary: localStorage.getItem('dictionary')
+		})
   }
 
   _handleKeyCommand(command) {
@@ -152,9 +171,11 @@ class BasicEditor extends React.Component {
   }
 
   _extractHTML(es) {
-    let html = es.getCurrentContent()
-    html = stateToHTML(html);
-    this.props.updateValue(this.props.id, html)
+    let html = es.getCurrentContent();
+    import(/* webpackChunkName: "draft-js-export-html" */ 'draft-js-export-html').then( _ => {
+			html = _.stateToHTML(html);
+    });
+    this.props.updateValue(this.props.id, html);
   }
 
   _handleRemove() {
@@ -181,7 +202,7 @@ class BasicEditor extends React.Component {
     return (
       <div style={ style }>
         <button
-          onClick={ this.handleRemove } 
+          onClick={ this.handleRemove }
           className="remove-btn">
             <i className="fa fa-times"></i>
           </button>

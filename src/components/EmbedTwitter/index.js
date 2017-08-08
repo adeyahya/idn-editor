@@ -1,5 +1,4 @@
 import React from 'react'
-import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
 
@@ -70,7 +69,7 @@ class EmbedTwitter extends React.Component {
 	render() {
 		return (
 			<div className="relative">
-				<button 
+				<button
 					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>

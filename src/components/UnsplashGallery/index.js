@@ -12,7 +12,7 @@ class UnsplashGallery extends React.Component {
 			value: ''
 		}
 
-		this.handleUpload = () => this._handleUpload()
+		this.handleUpload = () => this._handleUpload();
 		this.unsplash = new Unsplash({
 		  applicationId: "72b04f0837ce459c84c147913b87247a647f53b8a59866493206c3f37d1cadf2",
 		  secret: "6ecf1d14ea76fef2f4d6bf5bd7c5ed344ff7b7da0086e4ca620527015df50be9",
@@ -126,7 +126,7 @@ class UnsplashGallery extends React.Component {
 		}
 		return (
 			<div className="relative">
-				<button 
+				<button
 					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>

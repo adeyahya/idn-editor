@@ -1,9 +1,7 @@
 import React from 'react'
-import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
 import url from '../../utils/url'
-import root from 'window-or-global'
 
 class EmbedFacebook extends React.Component {
 	constructor(props) {
@@ -147,7 +145,7 @@ class EmbedFacebook extends React.Component {
 	render() {
 		return (
 			<div className="relative">
-				<button 
+				<button
 					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>

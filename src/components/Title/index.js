@@ -1,5 +1,4 @@
 import React from 'react'
-import propTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { updateValue, removeSection } from '../../../actions'
 
@@ -43,17 +42,17 @@ class Title extends React.Component {
 			switch (type) {
 				case 'h1':
 					return (
-						<h1 
-							onKeyUp={ this._onChange.bind(this) } 
-							ref={ (input) => this.header = input } 
+						<h1
+							onKeyUp={ this._onChange.bind(this) }
+							ref={ (input) => this.header = input }
 							contentEditable="true"
 							style={ style }
 							onPaste={ (e) => this._strip(e) }
 							placeholder={ this.state.placeholder }></h1>)
 
 				case 'h2': {
-					return ( 
-						<h2 
+					return (
+						<h2
 							onKeyUp={ this._onChange.bind(this) }
 							ref={ (input) => this.header = input }
 							contentEditable="true"

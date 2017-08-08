@@ -3,10 +3,13 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 
 let babel = {
-  entry: "./src/index.js",
+  entry: {
+  	index: './src/index.js'
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'bundle.js'
+    chunkFilename: '[name].bundle.js',
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
@@ -14,7 +17,8 @@ let babel = {
         test: /\.js?$/,
         loader: 'babel-loader',
         options: {
-          presets: ['flow','react','es2015']
+          presets: ['flow','react','es2015'],
+          plugins: ["dynamic-import-webpack"]
         },
         exclude: [
           path.resolve(__dirname, 'node_modules')
@@ -57,7 +61,17 @@ let babel = {
         { from: /^\/$/, to: '/index.html'},
       ]
     }
-  }
+  },
+  plugins: [
+  // 	new webpack.optimize.CommonsChunkPlugin({
+		// 	name: 'common' // Specify the common bundle's name.
+		// })
+  	new webpack.ProvidePlugin({
+  		Promise: 'bluebird',
+  		root: 'window-or-global',
+  		propTypes: 'prop-types'
+  	})
+  ]
 }
 
 let sass = require('./webpack/sass')

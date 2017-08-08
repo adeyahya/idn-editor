@@ -1,8 +1,6 @@
 import React from 'react'
-import Promise from 'bluebird'
 import { connect } from 'react-redux'
 import { removeSection, updateValue } from '../../../actions'
-import root from 'window-or-global'
 
 class EmbedInstagram extends React.Component {
 	constructor(props) {
@@ -79,7 +77,7 @@ class EmbedInstagram extends React.Component {
 		return (
 			<div className="relative">
 				<button
-					onClick={ this.handleRemove } 
+					onClick={ this.handleRemove }
 					className="remove-btn">
 					  <i className="fa fa-times"></i>
 					</button>
