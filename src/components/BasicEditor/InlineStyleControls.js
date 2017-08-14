@@ -7,13 +7,14 @@ export default function InlineStyleControls(props) {
 
   return (
     <div className="RichEditor-controls">
-      {inlineStyles.map(type =>
+      {inlineStyles.map((type, index) =>
         <StyleButton
-          key={type.label}
+          key={index}
           active={currentStyle.has(type.style)}
           label={type.label}
           onToggle={props.onToggle}
           style={type.style}
+          icon={type.icon}
         />
       )}
     </div>

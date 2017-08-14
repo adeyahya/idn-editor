@@ -6,12 +6,11 @@ import { render } from 'react-dom';
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import Wrapper from './containers/Wrapper.js';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import idneditor from '../reducers';
 
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import idneditor from '../reducers'
-
-const loggerMiddleware = createLogger()
+const loggerMiddleware = createLogger();
 
 let store = createStore(
 	idneditor,

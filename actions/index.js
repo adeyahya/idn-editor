@@ -4,6 +4,36 @@ export const addContent = () => {
 	}
 }
 
+export const getDraft = (payload) => {
+	return (dispatch) => {
+		dispatch({ type: 'GET_DRAFT', payload: payload })
+	}
+}
+
+export const toggleGallery = (i) => {
+	return (dispatch) => {
+		dispatch({ type: 'TOGGLE_GALLERY', index: i })
+	}
+}
+
+export const uploadStart = (i) => {
+	return (dispatch) => {
+		dispatch({ type: 'UPLOAD_START', index: i })
+	}
+}
+
+export const uploadEnd = (i) => {
+	return (dispatch) => {
+		dispatch({ type: 'UPLOAD_END', index: i })
+	}
+}
+
+export const updateProgress = (i, progressNumber) => {
+	return (dispatch) => {
+		dispatch({ type: 'UPDATE_PROGRESS', index: i, payload: progressNumber })
+	}
+}
+
 export const addTitle = () => {
 	return (dispatch) => {
 		dispatch({ type: 'ADD_TITLE' })

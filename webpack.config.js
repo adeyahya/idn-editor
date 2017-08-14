@@ -1,6 +1,7 @@
-const path = require('path')
-const webpack = require('webpack')
-const merge = require('webpack-merge')
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let babel = {
   entry: {
@@ -8,8 +9,8 @@ let babel = {
   },
   output: {
     path: path.resolve(__dirname, 'public'),
-    chunkFilename: '[name].bundle.js',
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
+    chunkFilename: '[name]-[chunkhash]-chunk.js',
   },
   module: {
     rules: [
@@ -59,18 +60,21 @@ let babel = {
     historyApiFallback: {
       rewrites: [
         { from: /^\/$/, to: '/index.html'},
+        { from: /^\/preview$/, to: '/preview.html'},
       ]
     }
   },
   plugins: [
-  // 	new webpack.optimize.CommonsChunkPlugin({
-		// 	name: 'common' // Specify the common bundle's name.
-		// })
   	new webpack.ProvidePlugin({
   		Promise: 'bluebird',
   		root: 'window-or-global',
   		propTypes: 'prop-types'
-  	})
+  	}),
+  	new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      analyzerPort: 3001,
+      openAnalyzer: true,
+    })
   ]
 }
 

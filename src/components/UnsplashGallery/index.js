@@ -23,6 +23,17 @@ class UnsplashGallery extends React.Component {
 		this.handleRemove = this._handleRemove.bind(this)
 	}
 	componentWillMount() {
+		const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
+		this.setState({
+			removable: removable()
+		})
+
 		if (this.props.value == '') {
 			this.unsplash.photos.getRandomPhoto({ count: "60" })
 			  .then(res => res.json())
@@ -126,11 +137,7 @@ class UnsplashGallery extends React.Component {
 		}
 		return (
 			<div className="relative">
-				<button
-					onClick={ this.handleRemove }
-					className="remove-btn">
-					  <i className="fa fa-times"></i>
-					</button>
+				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 				{ this.state.value === '' ? unsplashSelector() : unsplashImage() }
 			</div>
 		)

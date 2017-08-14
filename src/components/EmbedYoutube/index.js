@@ -18,9 +18,20 @@ class EmbedYoutube extends React.Component {
 	}
 
 	componentWillMount() {
+		const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
+  	this.setState({
+  		removable: removable()
+  	})
+
 		if (this.props.value != '')
 			this.setState({
-				html: this.props.value
+				html: this.props.value,
 			})
 	}
 
@@ -52,11 +63,7 @@ class EmbedYoutube extends React.Component {
 	render() {
 		return(
 			<div className="relative">
-				<button
-					onClick={ this.handleRemove }
-					className="remove-btn">
-					  <i className="fa fa-times"></i>
-					</button>
+				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Youtube here .."/> : <div><iframe width="100%" height="420" src={ this.state.html } frameborder="0" allowFullScreen></iframe></div> }
 
 				{ this.state.warn == '' ? null : <div className="warn"> { this.state.warn } </div> }

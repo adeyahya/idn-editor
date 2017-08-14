@@ -1,22 +1,47 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addSection } from '../../actions';
+import {
+	addSection, getDraft
+} from '../../actions';
 import BasicEditor from '../components/BasicEditor';
-import ImageUploader from '../components/ImageUploader';
 import Title from '../components/Title';
 import EmbedTwitter from '../components/EmbedTwitter';
 import EmbedFacebook from '../components/EmbedFacebook';
 import EmbedInstagram from '../components/EmbedInstagram';
 import UnsplashGallery from '../components/UnsplashGallery';
 import EmbedYoutube from '../components/EmbedYoutube';
+import ImageGallery from '../components/ImageGallery';
+import TextArea from '../components/TextArea';
 
 class Wrapper extends React.Component {
 	constructor(props) {
     super(props);
+
+    this.saveDraft = this._saveDraft.bind(this);
   }
 
   _addSection(value) {
-    this.props.addSection(value)
+    this.props.addSection(value);
+  }
+
+  componentDidMount() {
+  	let self = this
+  	import('superagent')
+  		.then(request => {
+  			request
+  				.get('http://localhost:8080/api/post')
+  				.accept('json')
+  				.end((err, res) => {
+  					if (err) {
+  						return console.warn(err)
+  					}
+						self.props.getDraft(JSON.parse(res.text).data);
+  				})
+  		})
+  }
+
+  _saveDraft() {
+  	localStorage.setItem('draft', JSON.stringify(this.props.data));
   }
 
 	render() {
@@ -28,11 +53,11 @@ class Wrapper extends React.Component {
 						case 'content':
 							return ( <BasicEditor value={ item.value } key={ index } id={ index }></BasicEditor> )
 
+						case 'excerpt':
+							return ( <TextArea value={ item.value } key={ index } id={ index }></TextArea> )
+
 						case 'title':
 							return ( <Title value={ item.value } type={ item.style } id={ index } key={ index }></Title> )
-
-            case 'image':
-              return ( <ImageUploader value={ item.value } key={ index } id={ index }></ImageUploader> )
 
             case 'twitter':
               return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
@@ -43,11 +68,11 @@ class Wrapper extends React.Component {
             case 'instagram':
               return ( <EmbedInstagram value={ item.value } key={ index } id={ index }></EmbedInstagram> )
 
-            case 'unsplash':
-              return ( <UnsplashGallery value={ item.value } key={ index } id={ index }></UnsplashGallery> )
-
            	case 'youtube':
               return ( <EmbedYoutube value={ item.value } key={ index } id={ index }></EmbedYoutube> )
+
+            case 'image':
+              return ( <ImageGallery value={ item.value } key={ index } id={ index }></ImageGallery> )
 					}
 				}) }
         <div className="text-center btn-group">
@@ -57,8 +82,15 @@ class Wrapper extends React.Component {
           <button onClick={ (e) => this._addSection({ type: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
           <button onClick={ (e) => this._addSection({ type: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
           <button onClick={ (e) => this._addSection({ type: 'youtube', value: '' }) }><i className="fa fa-youtube"></i> Embed Youtube</button>
-          <button onClick={ (e) => this._addSection({ type: 'unsplash', value: '' }) }><i className="fa fa-camera"></i> Unsplash</button>
+          <button onClick={ (e) => this._addSection({ type: 'image', value: '', uploading: false, gallery: false }) }><i className="fa fa-camera"></i> Add Image</button>
         </div>
+
+        {/* <div className="navbar-bottom">
+        	<div className="text-center btn-group">
+						<button onClick={ this.saveDraft }>Save to Draft</button>
+						<button onClick={ () => window.location.href = '/preview' }>Preview</button>
+        	</div>
+        </div> */}
 			</div>
 		)
 	}
@@ -72,7 +104,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addSection: (payload) => dispatch(addSection(payload))
+    addSection: (payload) => dispatch(addSection(payload)),
+    getDraft: (payload) => dispatch(getDraft(payload))
   }
 }
 

@@ -14,8 +14,16 @@ class EmbedInstagram extends React.Component {
 	}
 
 	componentWillMount() {
+		const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
 		this.setState({
-			html: this.props.value
+			html: this.props.value,
+			removable: removable()
 		})
 	}
 
@@ -76,11 +84,7 @@ class EmbedInstagram extends React.Component {
 		}
 		return (
 			<div className="relative">
-				<button
-					onClick={ this.handleRemove }
-					className="remove-btn">
-					  <i className="fa fa-times"></i>
-					</button>
+				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Instagram post here .."/> : <blockquote className="instagram-media" data-instgrm-captioned data-instgrm-version="7" style={style}><a href={ this.state.html } target="_blank"/>Fetching Post</blockquote> }
 			</div>
 		)

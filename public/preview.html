@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta property="fb:app_id" content="1645337432347069">
+    <meta property="og:url" content="https://idn-editor.firebaseapp.com" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="IDN Editor" />
+    <meta property="og:description" content="WYSIWYG Using React.js and Draft.js" />
+    <meta property="og:image" content="https://idn-editor.firebaseapp.com/thumb.jpg" />
+    <title>IDN Editor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet" href="text/css">
+    <script async defer src="//platform.instagram.com/en_US/embeds.js"></script>
+  </head>
+  <body>
+    <div class="container" id="container">
+
+    </div>
+		<script>
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId            : '1645337432347069',
+		      autoLogAppEvents : true,
+		      xfbml            : true,
+		      version          : 'v2.10'
+		    });
+		    FB.AppEvents.logPageView();
+
+		    // Get Embedded Video Player API Instance
+        var my_video_player;
+        FB.Event.subscribe('xfbml.ready', function(msg) {
+          if (msg.type === 'video') {
+            my_video_player = msg.instance;
+          }
+        });
+		  };
+
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "//connect.facebook.net/en_US/sdk.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+		</script>
+		<script>
+			// console.log(JSON.parse(localStorage.getItem('draft')))
+			JSON.parse(localStorage.getItem('draft')).map((item, index) => {
+				if (index === 1 && item.type === 'title') {
+					document.getElementById('container').insertAdjacentHTML( 'beforeend', `<h1>${item.value}</h1>` );
+				} else {
+					switch(item.type) {
+						case 'image': {
+							document.getElementById('container').insertAdjacentHTML( 'beforeend', `<figure><img class="max" src="${item.value}"></figure>` );
+							break;
+						}
+						case 'content': {
+							document.getElementById('container').insertAdjacentHTML( 'beforeend', `${item.value}` );
+							break;
+						}
+						case 'title': {
+							document.getElementById('container').insertAdjacentHTML( 'beforeend', `<h2>${item.value}</h2>` );
+							break;
+						}
+						case 'twitter': {
+							let script = document.createElement('script')
+							script.src = '//platform.twitter.com/widgets.js'
+							document.getElementById('container').insertAdjacentHTML( 'beforeend', `<blockquote class="twitter-tweet" data-lang="en"><a href="${item.value}"></a></blockquote>`);
+							document.getElementById('container').appendChild(script);
+							break;
+						}
+					}
+				}
+			})
+		</script>
+  </body>
+</html>

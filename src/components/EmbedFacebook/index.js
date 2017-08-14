@@ -18,8 +18,16 @@ class EmbedFacebook extends React.Component {
 	}
 
 	componentWillMount() {
+		const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
 		this.setState({
-			html: this.props.value
+			html: this.props.value,
+			removable: removable()
 		})
 	}
 
@@ -145,11 +153,7 @@ class EmbedFacebook extends React.Component {
 	render() {
 		return (
 			<div className="relative">
-				<button
-					onClick={ this.handleRemove }
-					className="remove-btn">
-					  <i className="fa fa-times"></i>
-					</button>
+				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 				{ this.state.html === '' ? <input className="input-link" type="text" onKeyUp={ (e) => this._onChange(e) } placeholder="Link Facebook here .."/> : <div ref={ (elem) => this.elem = elem } className={ this.state.class } data-href={ this.state.html }></div> }
 
 				{ this.state.warn == '' ? null : <div className="warn"> { this.state.warn } </div> }

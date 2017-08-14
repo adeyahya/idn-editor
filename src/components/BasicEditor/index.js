@@ -32,21 +32,21 @@ class BasicEditor extends React.Component {
     ]);
 
     this.INLINE_STYLES = [
-      {label: 'Bold', style: 'BOLD'},
-      {label: 'Italic', style: 'ITALIC'},
-      {label: 'Underline', style: 'UNDERLINE'},
-      {label: 'Monospace', style: 'CODE'},
-      {label: 'Strikethrough', style: 'STRIKETHROUGH'},
+      {icon: 'fa fa-bold', style: 'BOLD'},
+      {icon: 'fa fa-italic', style: 'ITALIC'},
+      {icon: 'fa fa-underline', style: 'UNDERLINE'},
+      // {label: 'Monospace', style: 'CODE'},
+      {icon: 'fa fa-strikethrough', style: 'STRIKETHROUGH'},
     ];
 
     this.BLOCK_TYPES = [
       {label: 'nostyle', style: 'unstyled'},
       // {label: 'H1', style: 'header-one'},
       // {label: 'H2', style: 'header-two'},
-      {label: 'Blockquote', style: 'blockquote'},
-      {label: 'UL', style: 'unordered-list-item'},
-      {label: 'OL', style: 'ordered-list-item'},
-      {label: 'Code Block', style: 'code-block'}
+      {icon: 'fa fa-quote-left', style: 'blockquote'},
+      {icon: 'fa fa-list-ul', style: 'unordered-list-item'},
+      {icon: 'fa fa-list-ol', style: 'ordered-list-item'},
+      // {icon: 'fa fa-code', style: 'code-block'}
     ];
 
     this.state = {
@@ -90,8 +90,16 @@ class BasicEditor extends React.Component {
   		})
   	}
 
+  	const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
 	  this.setState({
-			dictionary: localStorage.getItem('dictionary')
+			dictionary: localStorage.getItem('dictionary'),
+			removable: removable()
 		})
   }
 
@@ -171,11 +179,12 @@ class BasicEditor extends React.Component {
   }
 
   _extractHTML(es) {
+  	let self = this;
     let html = es.getCurrentContent();
     import(/* webpackChunkName: "draft-js-export-html" */ 'draft-js-export-html').then( _ => {
 			html = _.stateToHTML(html);
+			self.props.updateValue(self.props.id, html);
     });
-    this.props.updateValue(this.props.id, html);
   }
 
   _handleRemove() {
@@ -199,13 +208,10 @@ class BasicEditor extends React.Component {
       position: 'relative'
     }
 
+
     return (
       <div style={ style }>
-        <button
-          onClick={ this.handleRemove }
-          className="remove-btn">
-            <i className="fa fa-times"></i>
-          </button>
+				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
         <div className="RichEditor-root draftjs-bhe">
           <BlockStyleControls
             editorState={editorState}

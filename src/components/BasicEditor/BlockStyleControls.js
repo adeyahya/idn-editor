@@ -12,13 +12,14 @@ export default function BlockStyleControls(props) {
 
   return (
     <div className="RichEditor-controls">
-      {blockTypes.map((type) =>
+      {blockTypes.map((type, i) =>
         <StyleButton
-          key={type.label}
+          key={i}
           active={type.style === blockType}
           label={type.label}
           onToggle={props.onToggle}
           style={type.style}
+          icon={type.icon}
         />
       )}
     </div>

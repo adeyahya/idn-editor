@@ -10,11 +10,31 @@ class Title extends React.Component {
 			placeholder: 'Title Here ...'
 		}
 
-		this.handleRemove = this._handleRemove.bind(this)
+		this.handleRemove = this._handleRemove.bind(this);
+		this.handleKeyPress = this._handleKeyPress.bind(this);
 	}
 
 	componentDidMount() {
 		this.header.innerHTML = this.props.value
+	}
+
+	componentWillMount() {
+		const removable = () => {
+  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  			return true
+
+  		return this.props.data[this.props.id].removable
+  	}
+
+		this.setState({
+			removable: removable()
+		})
+	}
+
+	_handleKeyPress(e) {
+		if (e.target.innerHTML.length >= this.props.maxCharacter) {
+			e.preventDefault()
+		}
 	}
 
 	_onChange() {
@@ -24,7 +44,8 @@ class Title extends React.Component {
 	// Remove all styles or tag from clipboard when paste
 	_strip(e) {
 		e.preventDefault();
-    var text = e.clipboardData.getData("text/plain");
+    let text = e.clipboardData.getData("text/plain");
+    text = text.substring(0, this.props.maxCharacter);
     document.execCommand("insertHTML", false, text);
 	}
 
@@ -35,16 +56,28 @@ class Title extends React.Component {
 	render() {
 		const style = {
 			position: 'relative',
-	    // border: 'solid #dddddd 1px',
-	    // padding: '0 10px'
+	    marginBottom: '5px',
+	    marginTop: '10px',
+	    fontWeight: '200'
 		}
+
+		const styles = {
+			remaining: {
+		    fontSize: '12px',
+		    display: 'inherit',
+		    marginBottom: '20px'
+			}
+		}
+
 		const elType = (type) => {
 			switch (type) {
 				case 'h1':
 					return (
 						<h1
 							onKeyUp={ this._onChange.bind(this) }
+							onKeyPress={ this.handleKeyPress }
 							ref={ (input) => this.header = input }
+							className="single-line"
 							contentEditable="true"
 							style={ style }
 							onPaste={ (e) => this._strip(e) }
@@ -54,7 +87,9 @@ class Title extends React.Component {
 					return (
 						<h2
 							onKeyUp={ this._onChange.bind(this) }
+							onKeyPress={ this.handleKeyPress }
 							ref={ (input) => this.header = input }
+							className="single-line"
 							contentEditable="true"
 							style={ style }
 							onPaste={ (e) => this._strip(e) }
@@ -66,20 +101,23 @@ class Title extends React.Component {
 		return (
 			<div>
 				<header style={ style }>
-					{ this.props.type == 'h2' ? <button onClick={ this.handleRemove } className="remove-btn"><i className="fa fa-times"></i></button> : null }
+					{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 					{ elType(this.props.type) }
 				</header>
+				<span style={ styles.remaining }>{ (this.props.maxCharacter - this.props.data[this.props.id].value.length) } Remaining</span>
 			</div>
 		)
 	}
 }
 
 Title.propTypes = {
-	type: propTypes.string
+	type: propTypes.string,
+	maxCharacter: propTypes.number
 }
 
 Title.defaultProps = {
-	type: 'h2'
+	type: 'h2',
+	maxCharacter: 70
 }
 
 const mapStateToProps = (state, ownProps) => {
