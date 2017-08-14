@@ -9,6 +9,17 @@ const idneditor = (state = {
   			data: action.payload
   		}
   	}
+
+  	case 'SET_COLOR': {
+  		return update(state, {
+  			data: {
+  				[action.index]: {
+  					color: { $set: action.color }
+  				}
+  			}
+  		})
+  	}
+
   	case 'TOGGLE_GALLERY': {
   		return update(state, {
         data: {

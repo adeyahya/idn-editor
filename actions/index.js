@@ -10,6 +10,12 @@ export const getDraft = (payload) => {
 	}
 }
 
+export const setColor = (index, color) => {
+	return (dispatch) => {
+		dispatch({ type: 'SET_COLOR', index: index, color: color });
+	}
+}
+
 export const toggleGallery = (i) => {
 	return (dispatch) => {
 		dispatch({ type: 'TOGGLE_GALLERY', index: i })

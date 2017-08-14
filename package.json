@@ -27,6 +27,8 @@
     "draft-js-export-html": "^0.5.4",
     "express": "^4.15.4",
     "font-awesome": "^4.7.0",
+    "mongoose": "^4.11.7",
+    "object-to-formdata": "^1.0.12",
     "prop-types": "^15.5.10",
     "react": "^15.0.2",
     "react-addons-update": "^15.6.0",

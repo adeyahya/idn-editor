@@ -2,7 +2,7 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { removeSection, updateValue } from '../../../actions';
-
+import scrollToComponent from 'react-scroll-to-component';
 import DropBox from './DropBox.js';
 import Image from './Image.js';
 
@@ -23,6 +23,10 @@ class ImageGallery extends React.Component {
 		this.props.removeSection(this.props.id)
 	}
 
+	componentDidMount() {
+		scrollToComponent(this.imageGallery);
+	}
+
 	componentWillMount() {
 		const removable = () => {
   		if (typeof this.props.data[this.props.id].removable == 'undefined')
@@ -39,7 +43,7 @@ class ImageGallery extends React.Component {
 
 	render() {
 		return (
-			<div className="image-gallery relative">
+			<div className="image-gallery relative" ref={ (el) => { this.imageGallery = el } }>
 				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 				{ this.props.data[this.props.id].value == '' ? <DropBox id={ this.props.id }/> : <Image id={ this.props.id }/> }
 			</div>

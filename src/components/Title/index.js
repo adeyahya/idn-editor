@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { updateValue, removeSection } from '../../../actions'
+import React from 'react';
+import { connect } from 'react-redux';
+import { updateValue, removeSection } from '../../../actions';
 
 class Title extends React.Component {
 	constructor(props) {
@@ -12,10 +12,6 @@ class Title extends React.Component {
 
 		this.handleRemove = this._handleRemove.bind(this);
 		this.handleKeyPress = this._handleKeyPress.bind(this);
-	}
-
-	componentDidMount() {
-		this.header.innerHTML = this.props.value
 	}
 
 	componentWillMount() {
@@ -99,7 +95,7 @@ class Title extends React.Component {
 		}
 
 		return (
-			<div>
+			<div ref={ (el) => { this.Title = el } }>
 				<header style={ style }>
 					{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 					{ elType(this.props.type) }

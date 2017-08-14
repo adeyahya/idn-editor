@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { removeSection, updateValue } from '../../../actions'
+import { connect } from 'react-redux';
+import { removeSection, updateValue } from '../../../actions';
 import {
   Editor,
   EditorState,
@@ -210,7 +210,7 @@ class BasicEditor extends React.Component {
 
 
     return (
-      <div style={ style }>
+      <div style={ style } ref={ (el) => { this.basicEditor = el } }>
 				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
         <div className="RichEditor-root draftjs-bhe">
           <BlockStyleControls

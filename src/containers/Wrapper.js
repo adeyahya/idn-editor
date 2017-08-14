@@ -12,6 +12,7 @@ import UnsplashGallery from '../components/UnsplashGallery';
 import EmbedYoutube from '../components/EmbedYoutube';
 import ImageGallery from '../components/ImageGallery';
 import TextArea from '../components/TextArea';
+import objectToFormData from 'object-to-formdata';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -25,11 +26,11 @@ class Wrapper extends React.Component {
   }
 
   componentDidMount() {
-  	let self = this
+  	const self = this
   	import('superagent')
   		.then(request => {
   			request
-  				.get('http://localhost:8080/api/post')
+  				.get('http://localhost:8080/api/article')
   				.accept('json')
   				.end((err, res) => {
   					if (err) {
@@ -41,6 +42,21 @@ class Wrapper extends React.Component {
   }
 
   _saveDraft() {
+  	const self = this;
+  	// console.log(objectToFormData(self.props.data))
+  	import('superagent')
+  		.then(request => {
+  			request
+  				.post('http://localhost:8080/api/article')
+  				.send({ data: self.props.data })
+  				.end(function(err, res){
+				    if (err || !res.ok) {
+				      alert('Oh no! error');
+				    } else {
+				    	console.log(res.body)
+				    }
+				  });
+  		})
   	localStorage.setItem('draft', JSON.stringify(this.props.data));
   }
 
@@ -85,12 +101,12 @@ class Wrapper extends React.Component {
           <button onClick={ (e) => this._addSection({ type: 'image', value: '', uploading: false, gallery: false }) }><i className="fa fa-camera"></i> Add Image</button>
         </div>
 
-        {/* <div className="navbar-bottom">
+        <div className="navbar-bottom">
         	<div className="text-center btn-group">
 						<button onClick={ this.saveDraft }>Save to Draft</button>
 						<button onClick={ () => window.location.href = '/preview' }>Preview</button>
         	</div>
-        </div> */}
+        </div>
 			</div>
 		)
 	}

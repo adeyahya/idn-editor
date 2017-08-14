@@ -8,8 +8,10 @@ import {
 	uploadEnd,
 	updateProgress,
 	toggleGallery,
+	setColor
 } from '../../../actions';
 import Gallery from './Gallery';
+import ColorThief from '../../utils/color-thief.js';
 
 class DropBox extends React.Component {
 	constructor(props) {
@@ -33,7 +35,7 @@ class DropBox extends React.Component {
 
 		const reader = new FileReader();
 		reader.readAsDataURL(files[0]);
-
+		let img = document.createElement('img')
 		let formData = new FormData();
 		formData.append('image', files[0])
 
@@ -58,9 +60,15 @@ class DropBox extends React.Component {
 		})
 
 		reader.onloadend = function() {
-			// console.log(reader.result)
+			img.src = reader.result
 			self.props.updateValue(self.props.id, reader.result);
 			self.props.uploadStart(self.props.id);
+		}
+
+		// get dominant color of an image
+		img.onload = function() {
+			let ct = new ColorThief()
+			self.props.setColor(self.props.id, `rgb(${ ct.getColor(img).join(', ') })`)
 		}
   }
 
@@ -91,6 +99,7 @@ const mapDispatchToProps = (dispatch) => {
     uploadStart: (index) => dispatch(uploadStart(index)),
     uploadEnd: (index) => dispatch(uploadEnd(index)),
     toggleGallery: (index) => dispatch(toggleGallery(index)),
+    setColor: (index, color) => dispatch(setColor(index, color)),
   }
 }
 
