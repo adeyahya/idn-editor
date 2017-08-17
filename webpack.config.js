@@ -2,6 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const WebpackShellPlugin = require('webpack-shell-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 let babel = {
   entry: {
@@ -19,11 +21,9 @@ let babel = {
         loader: 'babel-loader',
         options: {
           presets: ['flow','react','es2015'],
-          plugins: ["dynamic-import-webpack"]
+          plugins: ["syntax-dynamic-import"]
         },
-        exclude: [
-          path.resolve(__dirname, 'node_modules')
-        ]
+        exclude: /(node_modules)/,
       },
       {
         test: /\.html$/,
@@ -74,7 +74,27 @@ let babel = {
       analyzerMode: 'server',
       analyzerPort: 3001,
       openAnalyzer: true,
-    })
+    }),
+    new WebpackShellPlugin({
+    	onBuildEnd: [
+    		'nodemon server.js'
+    	]
+    }),
+    new webpack.DefinePlugin({ // <-- key to reducing React's size
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    // new webpack.optimize.DedupePlugin(), //dedupe similar code
+    // new webpack.optimize.UglifyJsPlugin(), //minify everything
+    // new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+    // new CompressionPlugin({
+    //   asset: "[path].gz[query]",
+    //   algorithm: "gzip",
+    //   test: /\.js$|\.css$|\.html$/,
+    //   threshold: 10240,
+    //   minRatio: 0.8
+    // })
   ]
 }
 

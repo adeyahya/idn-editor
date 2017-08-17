@@ -29,6 +29,17 @@ const idneditor = (state = {
         }
       })
   	}
+
+  	case 'TOGGLE_MULTIPLE_UPLOAD': {
+  		return update(state, {
+        data: {
+          [action.index]: {
+            multipleupload: {$set: !state.data[action.index].multipleupload}
+          }
+        }
+      })
+  	}
+
     case 'ADD_SECTION': {
       return Object.assign({}, state, {
         data: state.data.concat(action.payload)

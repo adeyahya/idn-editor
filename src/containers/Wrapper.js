@@ -27,11 +27,10 @@ class Wrapper extends React.Component {
 
   componentDidMount() {
   	const self = this
-  	import('superagent')
+  	import(/* webpackChunkName: "superagent" */ 'superagent')
   		.then(request => {
   			request
-  				.get('http://localhost:8080/api/article')
-  				.accept('json')
+  				.get('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
   				.end((err, res) => {
   					if (err) {
   						return console.warn(err)
@@ -43,20 +42,28 @@ class Wrapper extends React.Component {
 
   _saveDraft() {
   	const self = this;
-  	// console.log(objectToFormData(self.props.data))
-  	import('superagent')
-  		.then(request => {
-  			request
-  				.post('http://localhost:8080/api/article')
-  				.send({ data: self.props.data })
-  				.end(function(err, res){
-				    if (err || !res.ok) {
-				      alert('Oh no! error');
-				    } else {
-				    	console.log(res.body)
-				    }
-				  });
-  		})
+
+  	// disable button
+  	this.saveDraftButton.setAttribute('disabled', true);
+  	this.saveDraftButton.innerHTML = 'Saving ...';
+
+  	import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
+  		request
+				.put('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
+				.send({
+					draft: true,
+					data: self.props.data
+				})
+				.end(function(err, res){
+			    if (err || !res.ok) {
+			      alert('Oh no! error');
+			    } else {
+			    	// Reenable draft button
+			    	self.saveDraftButton.setAttribute('disabled', false);
+				  	self.saveDraftButton.innerHTML = 'Save to Draft';
+			    }
+			  });
+  	})
   	localStorage.setItem('draft', JSON.stringify(this.props.data));
   }
 
@@ -98,13 +105,12 @@ class Wrapper extends React.Component {
           <button onClick={ (e) => this._addSection({ type: 'facebook', value: '' }) }><i className="fa fa-facebook"></i> Embed Facebook</button>
           <button onClick={ (e) => this._addSection({ type: 'instagram', value: '' }) }><i className="fa fa-instagram"></i> Embed Instagram</button>
           <button onClick={ (e) => this._addSection({ type: 'youtube', value: '' }) }><i className="fa fa-youtube"></i> Embed Youtube</button>
-          <button onClick={ (e) => this._addSection({ type: 'image', value: '', uploading: false, gallery: false }) }><i className="fa fa-camera"></i> Add Image</button>
+          <button onClick={ (e) => this._addSection({ type: 'image', value: '', uploading: false, gallery: false, multipleupload: false }) }><i className="fa fa-camera"></i> Add Image</button>
         </div>
 
         <div className="navbar-bottom">
         	<div className="text-center btn-group">
-						<button onClick={ this.saveDraft }>Save to Draft</button>
-						<button onClick={ () => window.location.href = '/preview' }>Preview</button>
+						<button ref={ (el) => { this.saveDraftButton = el } } onClick={ this.saveDraft }>Save to Draft</button>
         	</div>
         </div>
 			</div>

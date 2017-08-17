@@ -6,7 +6,7 @@ import indexOf from 'lodash/indexOf'
 
 export default function processInlineStylesAndEntities(inlineTagMap, entityTagMap, entityMap, block) {
   if (!block.inlineStyleRanges && !block.entityRanges) {
-    TODO: optimisation, exit early if length === 0 as well
+    // TODO: optimisation, exit early if length === 0 as well
     return block.text;
   }
 

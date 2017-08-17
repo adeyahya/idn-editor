@@ -27,6 +27,10 @@ class Title extends React.Component {
 		})
 	}
 
+	componentDidMount() {
+		this.header.innerHTML = this.props.value
+	}
+
 	_handleKeyPress(e) {
 		if (e.target.innerHTML.length >= this.props.maxCharacter) {
 			e.preventDefault()

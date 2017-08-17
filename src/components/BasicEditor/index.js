@@ -181,10 +181,10 @@ class BasicEditor extends React.Component {
   _extractHTML(es) {
   	let self = this;
     let html = es.getCurrentContent();
-    import(/* webpackChunkName: "draft-js-export-html" */ 'draft-js-export-html').then( _ => {
+    import(/* webpackChunkName: "draft-js-export-html" */ "draft-js-export-html").then(_ => {
 			html = _.stateToHTML(html);
 			self.props.updateValue(self.props.id, html);
-    });
+    })
   }
 
   _handleRemove() {

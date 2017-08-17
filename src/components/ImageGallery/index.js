@@ -3,8 +3,8 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { removeSection, updateValue } from '../../../actions';
 import scrollToComponent from 'react-scroll-to-component';
-import DropBox from './DropBox.js';
 import Image from './Image.js';
+import DropBox from './DropBox';
 
 class ImageGallery extends React.Component {
 	constructor(props) {

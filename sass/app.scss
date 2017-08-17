@@ -230,7 +230,8 @@ pre {
   width: 100%;
   height: 100%;
   position: fixed;
-  background: rgba(255, 255, 255, 0.87);
+  // background: rgba(255, 255, 255, 0.87);
+	background: rgba(0,0,0,0.12);
   left: 0;
   top: 0;
   z-index: 98;
@@ -332,11 +333,14 @@ figure {
 }
 
 .gallery-modal {
-	width: 620px;
-	top: calc(50% - 50px);
+  top: 50%;
 	left: 50%;
 	position: absolute;
 	transform: translate(-50%, -50%);
+	@extend .container;
+	box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.4);
+	margin: 0;
+	padding: 0;
 }
 .close-modal {
   border: none;
@@ -366,4 +370,67 @@ h1 {
 	color: #565656;
 	border-radius: 50px;
 	padding: 10px 20px;
+}
+
+
+.multiple-upload {
+	overflow: hidden;
+	position: fixed;
+	display: flex;
+	border: solid gainsboro 1px;
+	flex-direction: column;
+	bottom: 90px;
+	background: white;
+	left: 20px;
+	z-index: 99;
+	width: 400px;
+	box-shadow: 0 8px 17px 0 rgba(0,0,0,0.2);
+  border-radius: 3px;
+	&__body {
+		display: flex;
+		flex-direction: row;
+		height: 120px;
+		>figure {
+	    flex: 120px 0 0;
+	    overflow: hidden;
+	    position: relative;
+	    >img {
+		    position: absolute;
+		    height: 100%;
+		    left: 50%;
+		    top: 50%;
+		    transform: translate(-50%, -50%);
+	    }
+		}
+		>aside {
+	    flex: 1 0 0;
+	    display: flex;
+	    flex-direction: column;
+	    .caption {
+				flex: 1 0 0;
+				padding: 10px 10px 0 20px;
+				&__small {
+			    font-size: 10pt;
+			    font-weight: 400;
+			    display: block;
+				}
+				&__medium {
+					font-size: 11pt;
+					font-weight: 400;
+				}
+				&__large {
+			    display: block;
+			    margin-bottom: 20px;
+			    font-weight: bold;
+				}
+	    }
+	    >.progressbar {
+		    display: inline-block;
+		    background: #39a9f2;
+		    height: 4px;
+		    width: 2%;
+		    transition: all 0.2s;
+	    }
+		}
+	}
 }

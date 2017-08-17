@@ -16,6 +16,12 @@ export const setColor = (index, color) => {
 	}
 }
 
+export const toggleMultipleUpload = (i) => {
+	return (dispatch) => {
+		dispatch({ type: 'TOGGLE_MULTIPLE_UPLOAD', index: i })
+	}
+}
+
 export const toggleGallery = (i) => {
 	return (dispatch) => {
 		dispatch({ type: 'TOGGLE_GALLERY', index: i })

@@ -1,31 +1,46 @@
 .unsplash-gallery {
-  background-color: whitesmoke;
+  background-color: white;
+  border: solid black 2px;
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 90vh;
   &--form {
-  	display: 1 0 0;
+  	// flex: 1 0 0;
+  }
+
+  &--toolbar {
+		background: white;
+		padding: 20px 20px;
+		border-top: solid black 2px;
   }
 
   &--wrapper {
     display: flex;
-    flex-direction: row;
+    flex: 1 0 0;
+    flex-direction: column;
     flex-wrap: wrap;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
-    figure {
-			flex: 33.3333% 0 0;
-			height: 200px;
-			margin: 0;
-			position: relative;
-			overflow: hidden;
-      cursor: pointer;
-			img {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-			}
+    .gallery-wrap {
+    	display: flex;
+	    flex-direction: row;
+	    flex-wrap: wrap;
+			figure {
+				flex: 33.3333% 0 0;
+		    // border: solid white 1px;
+		    box-sizing: border-box;
+				height: 230px;
+				margin: 0;
+				position: relative;
+				overflow: hidden;
+	      cursor: pointer;
+				img {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
+	    }
     }
   }
 }

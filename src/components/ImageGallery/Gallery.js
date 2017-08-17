@@ -1,10 +1,9 @@
-import React from 'react'
-import Unsplash from 'unsplash-js'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 import {
 removeSection,
 toggleGallery,
-updateValue } from '../../../actions'
+updateValue } from '../../../actions';
 
 class Gallery extends React.Component {
 	constructor(props) {
@@ -19,28 +18,27 @@ class Gallery extends React.Component {
 		this.handleSearch = this._handleSearch.bind(this)
 		this.selectImage = this._selectImage.bind(this)
 		this.handleRemove = this._handleRemove.bind(this)
+		this.handleDropbox = this._handleDropbox.bind(this)
 	}
 	componentDidMount() {
 		document.querySelector('html, body').style.overflow = 'hidden';
 	}
 	componentWillMount() {
-		let self = this
-		import('superagent')
-			.then(request => {
-				request
-					.get('https://api.imgur.com/3/account/me/images')
-					.set('Authorization', 'Bearer 76951193ccff6574ffc64d89b8d7217b536f681a')
-					.end(function(err, res) {
-						if (err || !res.ok) {
-				      alert('Error upload!');
-				      self.props.updateValue(self.props.id, '')
-				    } else {
-							self.setState({
-								photos: res.body.data
-							})
-				    }
-					})
-			})
+		let self = this;
+		import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
+			request
+				.get('http://localhost:8080/api/images')
+				.end(function(err, res) {
+					if (err || !res.ok) {
+			      alert('Error upload!');
+			      self.props.updateValue(self.props.id, '')
+			    } else {
+						self.setState({
+							photos: res.body
+						})
+			    }
+				})
+		})
 	}
 
 	_handleSearch(e) {
@@ -65,20 +63,22 @@ class Gallery extends React.Component {
 		this.props.removeSection(this.props.id)
 	}
 
-	_mouseEnter() {
-		// document.querySelector('html, body').style.overflow = 'hidden'
-	}
-
-	_mouseLeave() {
-		// document.querySelector('html, body').style.overflow = 'initial'
+	_handleDropbox() {
+		import(/* webpackChunkName: "dropbox" */ 'dropbox').then(Dropbox => {
+			let dbx = new Dropbox({ accessToken: 'JJnJIY-g8tQAAAAAAAACJQOLbYaAqMk4LkSmg__HkWktfNsAY5HZioq1cxBUZze3' });
+			dbx.filesSearch({
+				path: '',
+				query: '*.png'
+			}).then(function(response) {
+			    console.log(response);
+			  }).catch(function(error) {
+			    console.log(error);
+			  });
+		})
 	}
 
 	componentWillUnmount() {
 		document.querySelector('html, body').style.overflow = 'initial';
-	}
-
-	componentDidUpdate() {
-		document.querySelector('html, body').style.overflow = 'initial'
 	}
 
 	render() {
@@ -97,40 +97,35 @@ class Gallery extends React.Component {
 		const unsplashSelector = () => {
 			const randomColor = () => {
 				const colors = [
-					'#068D9D',
-					'#53599A',
-					'#6D9DC5',
-					'#80DED9',
-					'#AEECEF',
-					'#FA9F42',
-					'#0B6E4F',
-					'#2B4162',
-					'#55DBCB',
-					'#39A2AE',
-					'#75E4B3',
-					'#BA2D0B'
+					'#9BAF6C',
 				]
 
 				return colors[Math.floor(Math.random() * colors.length)];
 			}
 			return (
 				<div className="unsplash-gallery gallery-modal">
-					<div className="unsplash-gallery--form">
+					{/*<div className="unsplash-gallery--form">
 						<form onSubmit={ this.handleSearch }>
 							<input type="text" ref={ (input) => { this.inputSearch = input } } placeholder="Search Photos on Unsplash"/>
 							<button style={ style.button } type="submit">Search</button>
 						</form>
-					</div>
+					</div>*/}
 					<div className="unsplash-gallery--wrapper" onMouseEnter={ this._mouseEnter } onMouseLeave={ this._mouseLeave }>
-						{ this.state.photos.map((item, index) => {
-							let backgroundColor = { backgroundColor: randomColor()}
-							let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
-							return (
-								<figure onClick={ () => this.selectImage(item.link) } key={ index } style={ backgroundColor }>
-									<img style={ dimension } src={ item.link } alt=""/>
-								</figure>
-							)
-						}) }
+						<div className="gallery-wrap">
+							{ this.state.photos.map((item, index) => {
+								let backgroundColor = { backgroundColor: `rgb(${item.palette.DarkMuted._rgb.join(', ')})`}
+								let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
+								return (
+									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`) } key={ index } style={ backgroundColor }>
+										<img style={ dimension } src={ `/uploads/${item.filename}` } alt=""/>
+									</figure>
+								)
+							}) }
+						</div>
+					</div>
+
+					<div className="unsplash-gallery--toolbar">
+						<button onClick={ this.handleDropbox }>import from dropbox</button>
 					</div>
 				</div>
 			)
