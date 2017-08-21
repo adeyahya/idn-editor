@@ -1,12 +1,18 @@
+export const fetchDraft = require('./fetchDraft.js');
+export const updateValue = require('./updateValue.js');
+export const removeSection = require('./removeSection.js');
+export const updateProgressUpload = require('./updateProgressUpload.js');
+export const uploadImage = require('./uploadImage.js');
+
 export const addContent = () => {
 	return (dispatch) => {
 		dispatch({ type: 'ADD_CONTENT' })
 	}
 }
 
-export const getDraft = (payload) => {
+export const setImageId = (index, imageId) => {
 	return (dispatch) => {
-		dispatch({ type: 'GET_DRAFT', payload: payload })
+		dispatch({ type: 'SET_IMAGE_ID', index: index, payload: imageId })
 	}
 }
 
@@ -40,12 +46,6 @@ export const uploadEnd = (i) => {
 	}
 }
 
-export const updateProgress = (i, progressNumber) => {
-	return (dispatch) => {
-		dispatch({ type: 'UPDATE_PROGRESS', index: i, payload: progressNumber })
-	}
-}
-
 export const addTitle = () => {
 	return (dispatch) => {
 		dispatch({ type: 'ADD_TITLE' })
@@ -64,14 +64,8 @@ export const addSection = (payload) => {
 	}
 }
 
-export const removeSection = (i) => {
-	return (dispatch) => {
-		dispatch({ type: 'REMOVE_SECTION', index: i })
-	}
-}
-
-export const updateValue = (i, payload) => {
-	return (dispatch) => {
-		dispatch({ type: 'UPDATE_VALUE', index: i, payload: payload })
-	}
-}
+// export const updateValue = (i, payload) => {
+// 	return (dispatch) => {
+// 		dispatch({ type: 'UPDATE_VALUE', index: i, payload: payload })
+// 	}
+// }

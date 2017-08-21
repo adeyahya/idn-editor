@@ -6,14 +6,16 @@ import {
 	updateValue,
 	uploadStart,
 	uploadEnd,
-	updateProgress,
+	updateProgressUpload,
 	toggleGallery,
 	setColor,
-	toggleMultipleUpload
+	toggleMultipleUpload,
+	uploadImage,
 } from '../../../actions';
+import request from 'superagent';
+
 import Gallery from './Gallery';
 import MultipleUpload from './MultipleUpload';
-import ColorThief from '../../utils/color-thief.js';
 
 class DropBox extends React.Component {
 	constructor(props) {
@@ -21,8 +23,13 @@ class DropBox extends React.Component {
 
 		this.state = {
 			files: [],
-			gallery: false
+			gallery: false,
 		};
+
+		this.options = {
+			maxUploadSize: 1024, // in kilobyte
+			toBigMessage: 'Gagal Unggah Gambar, Ukuran gambar maksimal adalah 1MB sedangkan ukuran file yang anda unggah adalah'
+		}
 
 		this.onDrop = this._onDrop.bind(this);
 	}
@@ -30,6 +37,7 @@ class DropBox extends React.Component {
 	_onDrop(files) {
 		let self = this
 
+		// Multiple upload
 		if ( files.length > 1 ) {
 			this.setState({
 				fileEntry: files
@@ -38,68 +46,53 @@ class DropBox extends React.Component {
 			return
 		}
 
+		if (files[0].size / 1024 > this.options.maxUploadSize) {
+			alert(`${this.options.toBigMessage} ${Number((files[0].size / 1024 / 1000).toFixed(1))}MB`);
+			return;
+		}
+
 		let formData = new FormData();
 		formData.append('image', files[0]);
-
-		import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
-			request
-				.post('http://localhost:8080/api/image')
-				.send(formData)
-				.on('progress', event => {
-					self.props.updateProgress(self.props.id, event.percent)
-				}).end(function(err, res) {
-					if (err || !res.ok) {
-						self.props.uploadEnd(self.props.id);
-						alert('Error upload!');
-						self.props.updateValue(self.props.id, '')
-					} else {
-						self.props.updateValue(self.props.id, `/uploads/${res.body.filename}`)
-						self.props.uploadEnd(self.props.id);
-					}
-				})
-			})
 
 		const reader = new FileReader();
 		reader.readAsDataURL(files[0]);
 		let img = document.createElement('img')
 
 		reader.onloadend = function() {
-			img.src = reader.result
-			self.props.updateValue(self.props.id, reader.result);
-			self.props.uploadStart(self.props.id);
+			self.props.uploadImage(self.props.id, formData, reader.result, 'http://localhost:8080/api/image');
 		}
   }
 
 	render() {
 		return (
 			<div className="image-gallery">
-				{ this.props.data[this.props.id].multipleupload ? <MultipleUpload id={ this.props.id } fileEntry={ this.state.fileEntry }/> : null }
+				{ this.props.data.multipleupload ? <MultipleUpload id={ this.props.id } fileEntry={ this.state.fileEntry }/> : null }
 				<Dropzone className="box" accept="image/*" onDrop={this.onDrop}>
 				  <p>Try dropping some files here, or click to select files to upload.</p>
-				  { this.props.data[this.props.id].multipleupload ? <p>Uploading Images</p> : <button onClick={ (e) => { e.stopPropagation(); this.props.toggleGallery(this.props.id) } }>Open Gallery</button> }
+
+				  { this.props.data.multipleupload ? <p>Uploading Images</p> : <div className="text-center btn-group"><button onClick={ (e) => { e.stopPropagation(); this.props.toggleGallery(this.props.id) } }>Open Gallery</button></div> }
 				</Dropzone>
-				{ this.props.data[this.props.id].gallery ? <Gallery id={this.props.id}></Gallery> : null }
+				{ this.props.data.gallery ? <Gallery id={this.props.id}></Gallery> : null }
 			</div>
 		)
 	}
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    data: state.data
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
   	removeSection: index => dispatch(removeSection(index)),
     updateValue: (index, value) => dispatch(updateValue(index, value)),
-    updateProgress: (index, value) => dispatch(updateProgress(index, value)),
+    updateProgressUpload: (index, value) => dispatch(updateProgressUpload(index, value)),
     uploadStart: (index) => dispatch(uploadStart(index)),
     uploadEnd: (index) => dispatch(uploadEnd(index)),
     toggleGallery: (index) => dispatch(toggleGallery(index)),
     toggleMultipleUpload: (index) => dispatch(toggleMultipleUpload(index)),
     setColor: (index, color) => dispatch(setColor(index, color)),
+    uploadImage: (index, file, endpoint) => dispatch(uploadImage(index, file, endpoint)),
   }
 }
 

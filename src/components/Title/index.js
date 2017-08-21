@@ -16,10 +16,10 @@ class Title extends React.Component {
 
 	componentWillMount() {
 		const removable = () => {
-  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  		if (typeof this.props.data.removable == 'undefined')
   			return true
 
-  		return this.props.data[this.props.id].removable
+  		return this.props.data.removable
   	}
 
 		this.setState({
@@ -28,7 +28,7 @@ class Title extends React.Component {
 	}
 
 	componentDidMount() {
-		this.header.innerHTML = this.props.value
+		this.header.innerHTML = this.props.data.value
 	}
 
 	_handleKeyPress(e) {
@@ -104,7 +104,7 @@ class Title extends React.Component {
 					{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
 					{ elType(this.props.type) }
 				</header>
-				<span style={ styles.remaining }>{ (this.props.maxCharacter - this.props.data[this.props.id].value.length) } Remaining</span>
+				<span style={ styles.remaining }>{ (this.props.maxCharacter - this.props.data.value.length) } Remaining</span>
 			</div>
 		)
 	}
@@ -122,7 +122,7 @@ Title.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    // draft: state.data
   }
 }
 

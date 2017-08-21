@@ -11,6 +11,8 @@ import {
   CompositeDecorator,
   Modifier
 } from 'draft-js';
+import {stateToHTML } from 'draft-js-export-html';
+import request from 'superagent';
 
 import Link from './Link';
 import EntityControls from './EntityControls';
@@ -52,7 +54,7 @@ class BasicEditor extends React.Component {
     this.state = {
       editorState: value != '' ?
         EditorState.createWithContent(
-          ContentState.createFromBlockArray(htmlToContent(value)),
+          ContentState.createFromBlockArray(htmlToContent(this.props.data.value)),
           decorator
         ) :
         EditorState.createEmpty(decorator)
@@ -75,26 +77,24 @@ class BasicEditor extends React.Component {
 
   componentWillMount() {
   	if (!localStorage.getItem('dictionary')) {
-  		import(/* webpackChunkName: "superagent" */ 'superagent').then( request => {
-				request
-		  		.get('/dictionary.txt')
-		  		.set('Content-Type', 'plain/text')
-		  		.then(res => {
-		  			localStorage.setItem('dictionary', res.text);
-		  			this.setState({
-		  				dictionary: localStorage.getItem('dictionary')
-		  			})
-		  		}).catch((err) => {
-		  			console.warn(err.message);
-		  		})
-  		})
+  		request
+	  		.get('/dictionary.txt')
+	  		.set('Content-Type', 'plain/text')
+	  		.then(res => {
+	  			localStorage.setItem('dictionary', res.text);
+	  			this.setState({
+	  				dictionary: localStorage.getItem('dictionary')
+	  			})
+	  		}).catch((err) => {
+	  			console.warn(err.message);
+	  		})
   	}
 
   	const removable = () => {
-  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  		if (typeof this.props.data.removable == 'undefined')
   			return true
 
-  		return this.props.data[this.props.id].removable
+  		return this.props.data.removable
   	}
 
 	  this.setState({
@@ -181,10 +181,8 @@ class BasicEditor extends React.Component {
   _extractHTML(es) {
   	let self = this;
     let html = es.getCurrentContent();
-    import(/* webpackChunkName: "draft-js-export-html" */ "draft-js-export-html").then(_ => {
-			html = _.stateToHTML(html);
-			self.props.updateValue(self.props.id, html);
-    })
+		html = stateToHTML(html);
+		self.props.updateValue(self.props.id, html);
   }
 
   _handleRemove() {
@@ -245,7 +243,7 @@ class BasicEditor extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    // data: state.data
   }
 }
 

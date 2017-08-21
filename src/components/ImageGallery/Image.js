@@ -1,7 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
-import scrollToComponent from 'react-scroll-to-component';
 import {
 	updateValue,
 	toggleGallery
@@ -14,7 +13,8 @@ class Image extends React.Component {
 		this.state = {
 			files: [],
 			value: '',
-			title: ''
+			title: '',
+			source: ''
 		};
 		this.handleChange = this._handleChange.bind(this)
 	}
@@ -25,12 +25,7 @@ class Image extends React.Component {
 		})
 	}
 
-	componentDidMount() {
-		scrollToComponent(this.imageWrapper);
-	}
-
 	_handleChange() {
-		scrollToComponent(this.imageWrapper);
 		this.props.updateValue(this.props.id, '')
 		this.props.toggleGallery(this.props.id)
 	}
@@ -65,7 +60,7 @@ class Image extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    data: state.draft.data
   }
 }
 

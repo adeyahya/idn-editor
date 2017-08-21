@@ -15,14 +15,14 @@ class EmbedInstagram extends React.Component {
 
 	componentWillMount() {
 		const removable = () => {
-  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  		if (typeof this.props.data.removable == 'undefined')
   			return true
 
-  		return this.props.data[this.props.id].removable
+  		return this.props.data.removable
   	}
 
 		this.setState({
-			html: this.props.value,
+			html: this.props.data.value,
 			removable: removable()
 		})
 	}
@@ -93,7 +93,7 @@ class EmbedInstagram extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    // data: state.data
   }
 }
 

@@ -15,15 +15,15 @@ class TextArea extends React.Component {
 	}
 
 	componentDidMount() {
-		this.header.innerHTML = this.props.value
+		this.header.innerHTML = this.props.data.value
 	}
 
 	componentWillMount() {
 		const removable = () => {
-  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  		if (typeof this.props.data.removable == 'undefined')
   			return true
 
-  		return this.props.data[this.props.id].removable
+  		return this.props.data.removable
   	}
 
 		this.setState({
@@ -88,7 +88,7 @@ TextArea.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    // data: state.data
   }
 }
 

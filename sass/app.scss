@@ -6,7 +6,8 @@ html,body {
 
 body {
   padding-bottom: 250px;
-  font-family: 'Roboto Slab';
+  // font-family: 'Roboto Slab';
+  font-family: SF Optimized, system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
   color: #333;
   font-weight: 300;
   font-size: 18px;
@@ -431,6 +432,17 @@ h1 {
 		    width: 2%;
 		    transition: all 0.2s;
 	    }
+		}
+	}
+
+	&__footer.warning {
+		>p {
+	    margin: 0;
+	    padding: 10px;
+	    background: #f0ad4e;
+	    font-weight: 400;
+	    color: white;
+	    font-size: 11pt;
 		}
 	}
 }

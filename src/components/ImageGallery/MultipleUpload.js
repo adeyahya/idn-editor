@@ -11,26 +11,48 @@ import {
 	setColor
 } from '../../../actions';
 
+import request from 'superagent';
+
 class MultipleUpload extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			imagePreview: '',
-			processed: 1
+			processed: 1,
+			error: false,
+			warning: false
 		};
 	}
 
 	componentWillMount() {
-		this.setState({
-			perProcess: 100 / this.props.fileEntry.length,
-			length: this.props.fileEntry.length,
-			percentDone: 2
+		const files = this.props.fileEntry.filter(function(item) {
+			return (item.size / 1024) < 1024;
 		})
-	}
 
-	componentDidMount() {
-		this._upload(this.props.fileEntry);
+		const removed = this.props.fileEntry.filter(function(item) {
+			return (item.size / 1024) > 1024;
+		})
+
+		if (files.length < 1) {
+			alert('Setiap file yang anda unggah melebihi batas maksimum yaitu 1MB')
+			this.props.toggleMultipleUpload(this.props.id)
+			return
+		}
+
+		if (removed.length > 1) {
+			this.setState({
+				warning: true,
+				warningMessage: `${ removed.length } files tidak dapat diunggah karena ukuran melebihi batas maksimal yaitu 1MB`
+			})
+		}
+
+		this.setState({
+			length: files.length,
+			perProcess: 100 / files.length,
+			percentDone: 100 / files.length,
+		})
+		this._upload(files);
 	}
 
 	_upload(files) {
@@ -49,27 +71,25 @@ class MultipleUpload extends React.Component {
 			let formData = new FormData();
 			formData.append('image', item);
 
-			import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
-				request
-					.post('http://localhost:8080/api/image')
-					.send(formData)
-					.end(function(err, res) {
-						if (err || !res.ok) {
-							alert('Error upload!');
-						} else {
-							self.setState({
-								processed: self.state.processed + 1,
-								percentDone: self.state.percentDone + self.state.perProcess,
-								imagePreview: `/uploads/${res.body.filename}`
-							})
+			request
+				.post('http://localhost:8080/api/image')
+				.send(formData)
+				.end(function(err, res) {
+					if (err || !res.ok) {
+						console.warn('Error uploading ' + item);
+					} else {
+						self.setState({
+							processed: self.state.processed + 1,
+							percentDone: self.state.percentDone + self.state.perProcess,
+							imagePreview: `/uploads/${res.body.filename}`
+						})
 
-							if (self.state.processed == self.state.length + 1) {
-								self.props.toggleMultipleUpload(self.props.id)
-								self.props.toggleGallery(self.props.id)
-							}
+						if (self.state.processed == self.state.length + 1) {
+							self.props.toggleMultipleUpload(self.props.id)
+							self.props.toggleGallery(self.props.id)
 						}
-					})
-			})
+					}
+				})
 		})
 	}
 
@@ -79,6 +99,17 @@ class MultipleUpload extends React.Component {
 				width: `${this.state.percentDone}%`
 			}
 		}
+
+		const warning = () => {
+			return (
+				<div className="multiple-upload__footer warning">
+					<p>
+						{ this.state.warningMessage }
+					</p>
+				</div>
+			)
+		}
+
 		return (
 			<div className="multiple-upload">
 				<div className="multiple-upload__body">
@@ -94,6 +125,7 @@ class MultipleUpload extends React.Component {
 						<span className="progressbar" style={  styles.progress }></span>
 					</aside>
 				</div>
+				{ this.state.warning ? warning() : null }
 			</div>
 		)
 	}

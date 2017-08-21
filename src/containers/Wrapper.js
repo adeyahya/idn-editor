@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-	addSection, getDraft
+	addSection, fetchDraft
 } from '../../actions';
 import BasicEditor from '../components/BasicEditor';
 import Title from '../components/Title';
@@ -13,6 +13,8 @@ import EmbedYoutube from '../components/EmbedYoutube';
 import ImageGallery from '../components/ImageGallery';
 import TextArea from '../components/TextArea';
 import objectToFormData from 'object-to-formdata';
+
+import request from 'superagent';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -26,18 +28,7 @@ class Wrapper extends React.Component {
   }
 
   componentDidMount() {
-  	const self = this
-  	import(/* webpackChunkName: "superagent" */ 'superagent')
-  		.then(request => {
-  			request
-  				.get('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
-  				.end((err, res) => {
-  					if (err) {
-  						return console.warn(err)
-  					}
-						self.props.getDraft(JSON.parse(res.text).data);
-  				})
-  		})
+  	this.props.fetchDraft('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
   }
 
   _saveDraft() {
@@ -47,57 +38,64 @@ class Wrapper extends React.Component {
   	this.saveDraftButton.setAttribute('disabled', true);
   	this.saveDraftButton.innerHTML = 'Saving ...';
 
-  	import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
-  		request
-				.put('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
-				.send({
-					draft: true,
-					data: self.props.data
-				})
-				.end(function(err, res){
-			    if (err || !res.ok) {
-			      alert('Oh no! error');
-			    } else {
-			    	// Reenable draft button
-			    	self.saveDraftButton.setAttribute('disabled', false);
-				  	self.saveDraftButton.innerHTML = 'Save to Draft';
-			    }
-			  });
-  	})
+  	request
+			.put('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
+			.send({
+				draft: true,
+				data: self.props.data
+			})
+			.end(function(err, res){
+		    if (err || !res.ok) {
+		      alert('Oh no! error');
+		    } else {
+		    	// Reenable draft button
+		    	self.saveDraftButton.setAttribute('disabled', false);
+			  	self.saveDraftButton.innerHTML = 'Save to Draft';
+		    }
+		  });
   	localStorage.setItem('draft', JSON.stringify(this.props.data));
   }
 
 	render() {
+		const buildDraft = () => {
+			return (
+				<div>
+					{ this.props.draft.data.map((item, index) => {
+						switch( item.type ) {
+							case 'content':
+								return ( <BasicEditor data={ item } key={ index } id={ index }></BasicEditor> )
+
+							case 'excerpt':
+								return ( <TextArea data={ item } key={ index } id={ index }></TextArea> )
+
+							case 'title':
+								return ( <Title data={ item } key={ index } id={ index } type={ item.style }></Title> )
+
+	            case 'twitter':
+	              return ( <EmbedTwitter data={ item } key={ index } id={ index }></EmbedTwitter> )
+
+	            case 'facebook':
+	              return ( <EmbedFacebook data={ item } key={ index } id={ index }></EmbedFacebook> )
+
+	            case 'instagram':
+	              return ( <EmbedInstagram data={ item } key={ index } id={ index }></EmbedInstagram> )
+
+	           	case 'youtube':
+	              return ( <EmbedYoutube data={ item } key={ index } id={ index }></EmbedYoutube> )
+
+	            case 'image':
+	              return ( <ImageGallery data={ item } key={ index } id={ index }></ImageGallery> )
+						}
+					}) }
+				</div>
+			)
+		}
 		return (
 			<div className="container">
 				<br/>
-				{ this.props.data.map((item, index) => {
-					switch( item.type ) {
-						case 'content':
-							return ( <BasicEditor value={ item.value } key={ index } id={ index }></BasicEditor> )
 
-						case 'excerpt':
-							return ( <TextArea value={ item.value } key={ index } id={ index }></TextArea> )
+				{ this.props.draft.isLoading ? <p>Loading data</p> : buildDraft() }
 
-						case 'title':
-							return ( <Title value={ item.value } type={ item.style } id={ index } key={ index }></Title> )
-
-            case 'twitter':
-              return ( <EmbedTwitter value={ item.value } key={ index } id={ index }></EmbedTwitter> )
-
-            case 'facebook':
-              return ( <EmbedFacebook value={ item.value } key={ index } id={ index }></EmbedFacebook> )
-
-            case 'instagram':
-              return ( <EmbedInstagram value={ item.value } key={ index } id={ index }></EmbedInstagram> )
-
-           	case 'youtube':
-              return ( <EmbedYoutube value={ item.value } key={ index } id={ index }></EmbedYoutube> )
-
-            case 'image':
-              return ( <ImageGallery value={ item.value } key={ index } id={ index }></ImageGallery> )
-					}
-				}) }
         <div className="text-center btn-group">
           <button onClick={ (e) => this._addSection({ type: 'content', value: '' }) }><i className="fa fa-paragraph"></i> add Paragraph</button>
           <button onClick={ (e) => this._addSection({ type: 'title', value: '', style: 'h2' }) }><i className="fa fa-header"></i> add Header</button>
@@ -120,14 +118,14 @@ class Wrapper extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    draft: state.draft
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addSection: (payload) => dispatch(addSection(payload)),
-    getDraft: (payload) => dispatch(getDraft(payload))
+    fetchDraft: (url) => dispatch(fetchDraft(url))
   }
 }
 

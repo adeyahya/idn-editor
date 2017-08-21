@@ -7,13 +7,15 @@ const express = require('express'),
 	path = require('path'),
 	multer = require('multer'),
 	Vibrant = require('node-vibrant'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	Jimp = require("jimp");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
 // connect db
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/dummy');
 
 // setup storage
@@ -87,15 +89,30 @@ router.put('/article/:article_id', (req, res, next) => {
 
 // upload single file
 router.post('/image', upload.single('image'), (req, res) => {
+
+	Jimp.read(req.file.path, function(err, jimp) {
+			if (err) res.send(err);
+
+			jimp.resize(400, Jimp.AUTO)
+				.quality(90)
+				.write(path.resolve(__dirname, `public/uploads/thumb/${req.file.filename}`));
+
+			jimp.resize(200, Jimp.AUTO)
+				.quality(30)
+				.blur(5)
+				.write(path.resolve(__dirname, `public/uploads/placeholder/${req.file.filename}`));
+		})
+
 	Vibrant.from(req.file.path).getPalette(function(err, palette) {
-		let image = new Image();
+		let image = new Image(); // model
 		image = Object.assign(image, {
 			originalname: req.file.originalname,
 			encoding: req.file.encoding,
 			mimetype: req.file.mimetype,
 		  filename: req.file.filename,
 		  size: req.file.size,
-		  palette: palette
+		  palette: palette,
+		  source: ''
 		})
 
 		image.save(function(err) {
@@ -104,6 +121,15 @@ router.post('/image', upload.single('image'), (req, res) => {
 
 			res.json(image);
 		})
+	})
+})
+
+router.get('/images/:image_id', function(req, res, next) {
+	Image.findById(req.params.image_id, function(err, image) {
+		if (err)
+			res.send(err);
+
+		res.json(image);
 	})
 })
 

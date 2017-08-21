@@ -23,16 +23,12 @@ class ImageGallery extends React.Component {
 		this.props.removeSection(this.props.id)
 	}
 
-	componentDidMount() {
-		scrollToComponent(this.imageGallery);
-	}
-
 	componentWillMount() {
 		const removable = () => {
-  		if (typeof this.props.data[this.props.id].removable == 'undefined')
+  		if (typeof this.props.data.removable == 'undefined')
   			return true
 
-  		return this.props.data[this.props.id].removable
+  		return this.props.data.removable
   	}
 
 		this.setState({
@@ -45,7 +41,7 @@ class ImageGallery extends React.Component {
 		return (
 			<div className="image-gallery relative" ref={ (el) => { this.imageGallery = el } }>
 				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
-				{ this.props.data[this.props.id].value == '' ? <DropBox id={ this.props.id }/> : <Image id={ this.props.id }/> }
+				{ this.props.data.value == '' ? <DropBox data={ this.props.data } id={ this.props.id }/> : <Image data={ this.props.data } id={ this.props.id }/> }
 			</div>
 		)
 	}
@@ -53,7 +49,7 @@ class ImageGallery extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: state.data
+    // data: state.data
   }
 }
 

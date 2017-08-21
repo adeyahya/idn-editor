@@ -4,6 +4,8 @@ import {
 removeSection,
 toggleGallery,
 updateValue } from '../../../actions';
+import request from 'superagent';
+import Dropbox from 'dropbox';
 
 class Gallery extends React.Component {
 	constructor(props) {
@@ -25,20 +27,18 @@ class Gallery extends React.Component {
 	}
 	componentWillMount() {
 		let self = this;
-		import(/* webpackChunkName: "superagent" */ 'superagent').then(request => {
-			request
-				.get('http://localhost:8080/api/images')
-				.end(function(err, res) {
-					if (err || !res.ok) {
-			      alert('Error upload!');
-			      self.props.updateValue(self.props.id, '')
-			    } else {
-						self.setState({
-							photos: res.body
-						})
-			    }
-				})
-		})
+		request
+			.get('http://localhost:8080/api/images')
+			.end(function(err, res) {
+				if (err || !res.ok) {
+		      alert('Error upload!');
+		      self.props.updateValue(self.props.id, '')
+		    } else {
+					self.setState({
+						photos: res.body
+					})
+		    }
+			})
 	}
 
 	_handleSearch(e) {
@@ -51,11 +51,11 @@ class Gallery extends React.Component {
 		this.inputSearch.value = ""
 	}
 
-	_selectImage(unsplashUrl) {
+	_selectImage(imageUrl, imageId) {
 		this.setState({
-			value: unsplashUrl
+			value: imageUrl
 		})
-		this.props.updateValue(this.props.id, unsplashUrl)
+		this.props.updateValue(this.props.id, imageUrl)
 		this.props.toggleGallery(this.props.id)
 	}
 
@@ -64,17 +64,15 @@ class Gallery extends React.Component {
 	}
 
 	_handleDropbox() {
-		import(/* webpackChunkName: "dropbox" */ 'dropbox').then(Dropbox => {
-			let dbx = new Dropbox({ accessToken: 'JJnJIY-g8tQAAAAAAAACJQOLbYaAqMk4LkSmg__HkWktfNsAY5HZioq1cxBUZze3' });
-			dbx.filesSearch({
-				path: '',
-				query: '*.png'
-			}).then(function(response) {
-			    console.log(response);
-			  }).catch(function(error) {
-			    console.log(error);
-			  });
-		})
+		let dbx = new Dropbox({ accessToken: 'JJnJIY-g8tQAAAAAAAACJQOLbYaAqMk4LkSmg__HkWktfNsAY5HZioq1cxBUZze3' });
+		dbx.filesSearch({
+			path: '',
+			query: '*.png'
+		}).then(function(response) {
+		    console.log(response);
+		  }).catch(function(error) {
+		    console.log(error);
+		  });
 	}
 
 	componentWillUnmount() {
@@ -104,20 +102,14 @@ class Gallery extends React.Component {
 			}
 			return (
 				<div className="unsplash-gallery gallery-modal">
-					{/*<div className="unsplash-gallery--form">
-						<form onSubmit={ this.handleSearch }>
-							<input type="text" ref={ (input) => { this.inputSearch = input } } placeholder="Search Photos on Unsplash"/>
-							<button style={ style.button } type="submit">Search</button>
-						</form>
-					</div>*/}
 					<div className="unsplash-gallery--wrapper" onMouseEnter={ this._mouseEnter } onMouseLeave={ this._mouseLeave }>
 						<div className="gallery-wrap">
 							{ this.state.photos.map((item, index) => {
 								let backgroundColor = { backgroundColor: `rgb(${item.palette.DarkMuted._rgb.join(', ')})`}
 								let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
 								return (
-									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`) } key={ index } style={ backgroundColor }>
-										<img style={ dimension } src={ `/uploads/${item.filename}` } alt=""/>
+									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`, item._id) } key={ index } style={ backgroundColor }>
+										<img style={ dimension } src={ `/uploads/thumb/${item.filename}` } alt=""/>
 									</figure>
 								)
 							}) }
@@ -164,7 +156,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     removeSection: index => dispatch(removeSection(index)),
     toggleGallery: index => dispatch(toggleGallery(index)),
-    updateValue: (index, value) => dispatch(updateValue(index, value))
+    updateValue: (index, value) => dispatch(updateValue(index, value)),
   }
 }
 
