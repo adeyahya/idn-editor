@@ -40,6 +40,14 @@ export default function reducer(state= stateInit, action) {
       })
     }
 
+    case 'UPDATE_SECTION': {
+      return update(state, {
+        data: {
+          [action.index]: { $merge: action.payload }
+        }
+      })
+    }
+
     case 'REMOVE_SECTION': {
       return Object.assign({}, state, {
         data: state.data.slice(0, action.index).concat(state.data.slice(action.index + 1))
@@ -73,7 +81,9 @@ export default function reducer(state= stateInit, action) {
     			[action.index]: {
     				uploading: {$set: false},
     				uploadError: {$set: true},
-    				value: {$set: `uploads/${ action.payload.filename }`}
+    				value: {$set: `uploads/${ action.payload.filename }`},
+            width: {$set: action.payload.width},
+            height: {$set: action.payload.height}
     			}
     		}
     	})

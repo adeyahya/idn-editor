@@ -42,7 +42,7 @@ class Wrapper extends React.Component {
 			.put('http://localhost:8080/api/article/5991e2425b6ac31e2b2a4215')
 			.send({
 				draft: true,
-				data: self.props.data
+				data: self.props.draft.data
 			})
 			.end(function(err, res){
 		    if (err || !res.ok) {

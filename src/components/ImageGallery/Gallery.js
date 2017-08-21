@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
 removeSection,
 toggleGallery,
+update,
 updateValue } from '../../../actions';
 import request from 'superagent';
 import Dropbox from 'dropbox';
@@ -51,11 +52,15 @@ class Gallery extends React.Component {
 		this.inputSearch.value = ""
 	}
 
-	_selectImage(imageUrl, imageId) {
+	_selectImage(imageUrl, imageId, width, height) {
 		this.setState({
 			value: imageUrl
 		})
-		this.props.updateValue(this.props.id, imageUrl)
+    this.props.updateValue(this.props.id, imageUrl)
+		this.props.update(this.props.id, {
+      width: width,
+      height: height
+    })
 		this.props.toggleGallery(this.props.id)
 	}
 
@@ -108,7 +113,7 @@ class Gallery extends React.Component {
 								let backgroundColor = { backgroundColor: `rgb(${item.palette.DarkMuted._rgb.join(', ')})`}
 								let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
 								return (
-									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`, item._id) } key={ index } style={ backgroundColor }>
+									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`, item._id, item.width, item.height) } key={ index } style={ backgroundColor }>
 										<img style={ dimension } src={ `/uploads/thumb/${item.filename}` } alt=""/>
 									</figure>
 								)
@@ -157,6 +162,7 @@ const mapDispatchToProps = (dispatch) => {
     removeSection: index => dispatch(removeSection(index)),
     toggleGallery: index => dispatch(toggleGallery(index)),
     updateValue: (index, value) => dispatch(updateValue(index, value)),
+    update: (index, payload) => dispatch(update(index, payload)),
   }
 }
 

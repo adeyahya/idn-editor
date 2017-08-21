@@ -3,6 +3,7 @@ export const updateValue = require('./updateValue.js');
 export const removeSection = require('./removeSection.js');
 export const updateProgressUpload = require('./updateProgressUpload.js');
 export const uploadImage = require('./uploadImage.js');
+export const update = require('./update.js');
 
 export const addContent = () => {
 	return (dispatch) => {

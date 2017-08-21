@@ -59,7 +59,12 @@ class DropBox extends React.Component {
 		let img = document.createElement('img')
 
 		reader.onloadend = function() {
-			self.props.uploadImage(self.props.id, formData, reader.result, 'http://localhost:8080/api/image');
+      img.src = reader.result;
+      img.onload = function() {
+        formData.append('width', img.naturalWidth);
+        formData.append('height', img.naturalHeight);
+        self.props.uploadImage(self.props.id, formData, img.src, 'http://localhost:8080/api/image');
+      }
 		}
   }
 

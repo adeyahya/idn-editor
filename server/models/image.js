@@ -8,7 +8,9 @@ const ImageSchema = Schema({
   filename: String,
   size: Number,
   palette: Object,
-  source: String
+  source: String,
+  width: String,
+  height: String
 });
 
 module.exports = mongoose.model('Image', ImageSchema);

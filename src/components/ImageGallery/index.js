@@ -13,7 +13,8 @@ class ImageGallery extends React.Component {
 		this.state = {
 			files: [],
 			value: '',
-			title: ''
+			title: '',
+      parentWidth: 0
 		};
 
 		this.handleRemove = this._handleRemove.bind(this);
@@ -37,11 +38,17 @@ class ImageGallery extends React.Component {
 		})
 	}
 
+  componentDidMount() {
+    this.setState({
+      parentWidth: this.imageGallery.clientWidth
+    })
+  }
+
 	render() {
 		return (
 			<div className="image-gallery relative" ref={ (el) => { this.imageGallery = el } }>
 				{ !this.state.removable ? null : <button onClick={ this.handleRemove }className="remove-btn"><i className="fa fa-times"></i></button> }
-				{ this.props.data.value == '' ? <DropBox data={ this.props.data } id={ this.props.id }/> : <Image data={ this.props.data } id={ this.props.id }/> }
+				{ this.props.data.value == '' ? <DropBox data={ this.props.data } id={ this.props.id }/> : <Image parentWidth={ this.state.parentWidth } data={ this.props.data } id={ this.props.id }/> }
 			</div>
 		)
 	}

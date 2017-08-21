@@ -97,9 +97,8 @@ router.post('/image', upload.single('image'), (req, res) => {
 				.quality(90)
 				.write(path.resolve(__dirname, `public/uploads/thumb/${req.file.filename}`));
 
-			jimp.resize(200, Jimp.AUTO)
-				.quality(30)
-				.blur(5)
+			jimp.resize(250, Jimp.AUTO)
+				.quality(20)
 				.write(path.resolve(__dirname, `public/uploads/placeholder/${req.file.filename}`));
 		})
 
@@ -112,7 +111,9 @@ router.post('/image', upload.single('image'), (req, res) => {
 		  filename: req.file.filename,
 		  size: req.file.size,
 		  palette: palette,
-		  source: ''
+		  source: '',
+      width: req.body.width,
+      height: req.body.height
 		})
 
 		image.save(function(err) {
