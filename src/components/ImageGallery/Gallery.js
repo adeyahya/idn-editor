@@ -111,7 +111,7 @@ class Gallery extends React.Component {
 						<div className="gallery-wrap">
 							{ this.state.photos.map((item, index) => {
 								let backgroundColor = { backgroundColor: `rgb(${item.palette.DarkMuted._rgb.join(', ')})`}
-								let dimension = item.height > item.width ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
+								let dimension = Number(item.height) > Number(item.width) ? { width: '100%', height: 'auto' } : { width: 'auto', height: '105%' }
 								return (
 									<figure onClick={ () => this.selectImage(`/uploads/${item.filename}`, item._id, item.width, item.height) } key={ index } style={ backgroundColor }>
 										<img style={ dimension } src={ `/uploads/thumb/${item.filename}` } alt=""/>
