@@ -21,8 +21,6 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('style.css'),
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
       Promise: 'bluebird'
     })
   ]

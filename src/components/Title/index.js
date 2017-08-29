@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { updateValue, removeSection } from '../../../actions';
+import propTypes from 'prop-types';
 
 class Title extends React.Component {
 	constructor(props) {

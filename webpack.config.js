@@ -26,10 +26,6 @@ let config = {
       {
         test: /\.js?$/,
         loader: 'babel-loader',
-        options: {
-          presets: ['flow','react','es2015'],
-          plugins: ["syntax-dynamic-import"]
-        },
         exclude: /(node_modules)/,
       },
       {
@@ -58,7 +54,17 @@ let config = {
           { loader: "font-awesome-loader" }
         ]
       }
-    ]
+    ],
+    resolve: {
+      alias: {
+        config$: './configs/app-config.js',
+      },
+      extensions: ['', 'js'],
+      modules: [
+        'node_modules',
+        'bower_components',
+      ],
+    },
   },
   devServer: {
     contentBase: [path.join(__dirname, 'public')],
